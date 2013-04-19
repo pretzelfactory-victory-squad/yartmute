@@ -1,7 +1,11 @@
 ASCII-art Protocol v. 0.1
 
-server commands:
-"LIST:" 						- Get all docs on server.
-"OPEN:FILENAME" 				- Open a doc specified with FILENAME.
-"CLOSE:" 						- Close the current open doc
-"WRITE:CHARACTERS:VERSION"		- Write to open document
+server listen commands:
+"LIST_:" 							- Get all docs on server.
+"OPEN_:FILENAME" 					- Open a doc specified with FILENAME.
+"CLOSE:" 							- Close the current open doc
+"WRITE:CHARACTERS:VERSION"			- Write to open document
+"
+client listen commands:
+"LIST_:OBJECT1,OBJECT2:"			- Sends a comma seperated list. 
+"DOC__:FILENAME:VERSION:DOCUMENT:	- Sends a FILENAME=doc name, VERSION=long, DOCUMENT= utf-8 char stream.
