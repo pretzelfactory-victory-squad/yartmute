@@ -13,5 +13,12 @@ public class ServerDoc {
 		return null;	
 	}
 	
-
+	public static synchronized void save(){
+		
+	}
+	
+	public static synchronized String getFileName(){
+		return null;
+		
+	}
 }
