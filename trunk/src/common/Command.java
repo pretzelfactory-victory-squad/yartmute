@@ -1,17 +1,20 @@
 package common;
 
-import java.util.ArrayList;
-
 public abstract class Command {
 	protected String type;
-	private ArrayList<String> arg;
+	private String[] arg;
 	
-	public Command(ArrayList<String> arg){
+	public Command(String[] arg){
 		this.arg = arg;
 	}
 	
 	public String toString(){
-		return null;	
+		StringBuilder b = new StringBuilder(type);
+		for(String s:arg){
+			b.append(':');
+			b.append(s);
+		}
+		return b.toString();
 	}
 	public String getType(){
 		return type;
