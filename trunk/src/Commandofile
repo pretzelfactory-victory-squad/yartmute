@@ -1,3 +1,7 @@
-Här kan vi skriva fritt om våra värdosliga problem.
+ASCII-art Protocol v. 0.1
 
-Commands:
+server commands:
+"LIST:" 						- Get all docs on server.
+"OPEN:FILENAME" 				- Open a doc specified with FILENAME.
+"CLOSE:" 						- Close the current open doc
+"WRITE:CHARACTERS:VERSION"		- Write to open document
