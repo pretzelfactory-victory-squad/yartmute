@@ -1,7 +1,5 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -52,7 +50,10 @@ public class ServerSocketThread implements Runnable {
 	}
 	
 	private void invalid() {
-		
+		try{
+		writer.write("Din mamma jobbar inte här, städa upp ditt kommando!");
+		writer.flush();
+		} catch (Exception e){}
 	}
 	private ServerDoc open(){
 		
