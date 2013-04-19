@@ -40,24 +40,4 @@ public class ServerSocketThread implements Runnable {
 			}
 		}
 	}
-
-	private void invalid() {
-		try{
-			writer.write("Din mamma jobbar inte här, städa upp ditt kommando!");
-			writer.flush();
-		} catch (Exception e){}
-	}
-	private void open(){
-		doc = ServerDoc.getDoc("filename");
-	}
-	private void list(){
-
-
-	}
-	private void close(){
-
-	}
-	private void write(){
-
-	}
 }
