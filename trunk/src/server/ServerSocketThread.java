@@ -29,7 +29,7 @@ public class ServerSocketThread implements Runnable {
 	
 	private void waitForCommand(){
 		while(true){
-			String command = reader.;
+			String command = reader.read();
 			
 			switch(command){
 			case "OPEN": open();
