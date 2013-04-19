@@ -10,14 +10,14 @@ import java.util.List;
 
 public class ServerSocketThread implements Runnable {
 	private Socket s = null;
-	BufferedWriter writer = null;
-	BufferedReader reader = null;
+	OutputStreamWriter writer = null;
+	InputStreamReader reader = null;
 	
 	public ServerSocketThread(Socket s) {
 		this.s = s;
 		try {
-			reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+			reader = new InputStreamReader(s.getInputStream(), "UTF-8");
+			writer = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
