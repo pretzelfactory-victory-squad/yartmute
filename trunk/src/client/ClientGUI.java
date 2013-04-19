@@ -2,6 +2,7 @@ package client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -15,6 +16,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 public class ClientGUI extends JFrame implements Observer{
 	private JMenuBar menuBar;
@@ -30,6 +37,8 @@ public class ClientGUI extends JFrame implements Observer{
 		createMenu();
 		createTextArea();
 		
+		dummyLoginAnListFiles();
+		
 		this.setSize(800, 600);
 		setVisible(true);
 	}
@@ -37,6 +46,9 @@ public class ClientGUI extends JFrame implements Observer{
 	private void createTextArea() {
 		textArea = new JTextArea();
 		add(textArea);
+		TextAreaListener listener = new TextAreaListener();
+		textArea.addCaretListener(listener);
+		textArea.getDocument().addDocumentListener(listener);
 	}
 
 	private void createMenu(){
@@ -92,7 +104,7 @@ public class ClientGUI extends JFrame implements Observer{
 	
 	private void openFile(){
 		String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
-		        "Zoo Quiz", JOptionPane.QUESTION_MESSAGE, null, files.toArray(), files.get(0));
+		        "Open file", JOptionPane.QUESTION_MESSAGE, null, files.toArray(), files.get(0));
 		String text = client.openFile(selection);
 		
 		textArea.setText(text);
@@ -109,5 +121,58 @@ public class ClientGUI extends JFrame implements Observer{
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		
+	}
+	
+	private int[] convertToLineAndPos(String text) {
+		int length = text.length();
+		int line = 0;
+		int count = 0;
+		for( int i=0; i<text.length(); i++ ) {
+		    if( text.charAt(i) == '\n' ) {
+		        line++;
+		        count = i+1;
+		    }
+		}
+		int pos = length-count;
+		System.out.println("line: "+line+", pos: "+pos);
+		int[] result = {line, pos};
+		return result;
+	}
+	
+	private void dummyLoginAnListFiles(){
+		files = new ArrayList<String>();
+		files.add("hej");
+		files.add("hoj");
+		files.add("huj");
+	}
+	
+	private class TextAreaListener implements CaretListener, DocumentListener{
+		
+		public void caretUpdate(CaretEvent event) {
+			try {
+				convertToLineAndPos(textArea.getText(0, event.getDot()));
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		}
+		public void insertUpdate(DocumentEvent event) {
+			String textToOffset;
+			try {
+				textToOffset = textArea.getText(0, event.getOffset());
+				int[] lineAndPos = convertToLineAndPos(textToOffset);
+				int line = lineAndPos[0];
+				int pos = lineAndPos[1];
+				String insertion = textArea.getText(event.getOffset(), event.getLength());
+		        System.out.println("inserted '"+insertion+"' at line:"+line+", pos:"+pos);
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+	    }
+	    public void removeUpdate(DocumentEvent e) {
+	        
+	    }
+	    public void changedUpdate(DocumentEvent e) {
+
+	    }
 	}
 }
