@@ -1,6 +1,6 @@
 package common;
 
-public class Commando {
+public class Command {
 	public String toString(){
 		return null;
 		
