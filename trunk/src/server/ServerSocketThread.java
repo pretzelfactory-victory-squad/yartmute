@@ -29,22 +29,31 @@ public class ServerSocketThread implements Runnable {
 	
 	private void waitForCommand(){
 		while(true){
-			String command = reader.read();
-			
+			char[] cmd = new char[5];
+				try {
+					reader.read(cmd, 0, 5);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			String command = cmd.toString();
 			switch(command){
 			case "OPEN": open();
-				
+				break;
 			case "LIST": list();
-			
+				break;
 			case "CLOSE": close();
-			
+				break;
 			case "WRITE": write();
-			
+				break;
+			default: invalid();
 		
 			}
 		}
 	}
 	
+	private void invalid() {
+		
+	}
 	private ServerDoc open(){
 		
 		return null;	
