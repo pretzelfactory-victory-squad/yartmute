@@ -8,6 +8,9 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.List;
 
+import common.Command;
+import common.CommandFactory;
+
 public class ServerSocketThread implements Runnable {
 	private Socket s = null;
 	BufferedWriter writer = null;
@@ -30,7 +33,11 @@ public class ServerSocketThread implements Runnable {
 
 	private void waitForCommand(){
 		while(true){
-			Command command = cmdFactory.getCommand(reader.readLine());
+			try {
+				Command command = CommandFactory.getCommand(reader.readLine());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -41,7 +48,7 @@ public class ServerSocketThread implements Runnable {
 		} catch (Exception e){}
 	}
 	private void open(){
-		doc = ServerDoc.getDoc(filename)
+		doc = ServerDoc.getDoc("filename");
 	}
 	private void list(){
 
@@ -52,16 +59,5 @@ public class ServerSocketThread implements Runnable {
 	}
 	private void write(){
 
-	}
-
-	private String readStuff(){
-		char[] temp = new char[];
-		try {
-			reader.read(temp, 0, 5);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		String s = temp.toString(); 
-		return s;
 	}
 }
