@@ -9,4 +9,5 @@ public class Open extends Command {
 		type = "OPEN";
 	}
 	
+	
 }

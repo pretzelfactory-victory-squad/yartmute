@@ -26,9 +26,8 @@ public class ServerSocketThread implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	@Override
 	public void run() {
-
+		waitForCommand();
 	}
 
 	private void waitForCommand(){
