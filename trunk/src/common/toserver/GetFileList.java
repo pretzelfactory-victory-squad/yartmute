@@ -11,13 +11,9 @@ import server.ServerDocHandler;
 
 public class GetFileList extends ServerCommand {
 
-	public GetFileList(String[] arg) {
-		super(arg);
+	public GetFileList() {
+		super(new String[0]);
 		type = "LIST";
-	}
-	public GetFileList(String arg){
-		super(arg);
-		type = "LIST";	
 	}
 	@Override
 	public void execute(BufferedWriter writer) {
