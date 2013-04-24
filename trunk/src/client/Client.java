@@ -6,6 +6,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.toserver.Open;
+
 public class Client {
 	private Socket socket = null;
 	private ClientDoc doc = null;
@@ -31,7 +33,9 @@ public class Client {
 	}
 	
 	public String openFile(String file){
-		return file;
+		writer.openFile(file);
+		String contents = reader.waitForFile();
+		return contents;
 	}
 
 	public void uploadFile(){

@@ -10,6 +10,8 @@ import java.util.List;
 
 import common.Command;
 import common.CommandFactory;
+import common.toclient.SendFile;
+import common.toclient.SendFileList;
 import common.toserver.GetFileList;
 
 public class ClientSocketReader{
@@ -64,23 +66,33 @@ public class ClientSocketReader{
 		
 	}
 
-	public String[] waitForFileList() {
+	private Command waitForCommand(String type) {
 		String[] empty = {};
 		try {
 			boolean wait = true;
 			while(wait){
 				for(Command c : commands){
-					if(c instanceof List){
+					if(c.getType().equals(type)){
 						wait = false;
-						return ((GetFileList)c).getFileList();
+						return c;
 					}
 				}
 				wait();
 			}
-			return empty;
+			return null;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			return empty;
+			return null;
 		}
+	}
+	
+	public String[] waitForFileList(){
+		SendFileList cmd = (SendFileList)waitForCommand("SendFileList");
+		return cmd.getFileList();
+	}
+	
+	public String waitForFile() {
+		SendFile cmd = (SendFile)waitForCommand("SendFile");
+		return cmd.getFile();
 	}
 }

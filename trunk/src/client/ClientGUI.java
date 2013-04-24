@@ -106,8 +106,6 @@ public class ClientGUI extends JFrame implements Observer{
 		String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
 		        "Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
 		String text = client.openFile(selection);
-		
-		textArea.setText(text);
 	}
 
 	private void uploadFile(){
