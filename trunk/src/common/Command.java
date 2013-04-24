@@ -2,7 +2,7 @@ package common;
 
 public class Command {
 	protected String type;
-	private String[] arg;
+	protected String[] arg;
 	
 	
 	public Command(String[] arg){
