@@ -6,17 +6,10 @@ public class ServerDoc {
 	
 	
 	
-	private ServerDoc(){
-		
+	private ServerDoc(){	
 	}
-	public static synchronized ServerDoc getDoc(String filename){
-		return null;	
-	}
-	
-	public static synchronized void save(){
-		
-	}
-	
+	public synchronized void write(String filename){	
+	}	
 	public static synchronized String getFileName(){
 		return null;
 		

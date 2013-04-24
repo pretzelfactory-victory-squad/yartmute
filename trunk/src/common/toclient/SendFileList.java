@@ -1,7 +1,12 @@
 package common.toclient;
 
 public class SendFileList extends ClientCommand {
-	public SendFileList() {
-		super(new String[0]);
+
+	public SendFileList(String[] arg) {
+		super(arg);
 	}
+	public SendFileList(String arg) {
+		super(arg);
+	}
+	
 }

@@ -34,7 +34,8 @@ public class ServerSocketThread implements Runnable {
 	private void waitForCommand(){
 		while(true){
 			try {
-				Command command = CommandFactory.getCommand(reader.readLine());
+				ServerCommand command = (ServerCommand) CommandFactory.getCommand(reader.readLine());
+				command.execute(writer);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

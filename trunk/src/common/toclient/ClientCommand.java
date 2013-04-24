@@ -7,5 +7,8 @@ public class ClientCommand extends Command {
 	public ClientCommand(String[] arg) {
 		super(arg);
 	}
+	public ClientCommand(String arg) {
+		super(arg);
+	}
 
 }

@@ -15,8 +15,7 @@ public class ServerDocHandler {
 		
 	}
 	
-	public List<String> getDocList(){
-		return null;
-		
+	public static List<String> getDocList(){
+		return null;	
 	}
 }
