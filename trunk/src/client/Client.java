@@ -21,6 +21,8 @@ public class Client {
 	public boolean connect(String host, int port){
 		try {
 			socket = new Socket(host, port);
+			reader = new ClientSocketReader(this, socket);
+			writer = new ClientSocketWriter(socket.getOutputStream());
 			System.out.println("Connected to "+host+":"+port);
 			return true;
 		} catch (UnknownHostException e) {
