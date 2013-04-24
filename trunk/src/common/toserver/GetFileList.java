@@ -13,7 +13,7 @@ public class GetFileList extends ServerCommand {
 
 	public GetFileList() {
 		super(new String[0]);
-		type = "LIST";
+		this.type = "LIST";
 	}
 	@Override
 	public void execute(BufferedWriter writer) {

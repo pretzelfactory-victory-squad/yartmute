@@ -9,7 +9,7 @@ public class Command {
 	}
 	public Command(String a){
 		arg = new String[1];
-		arg[1] = a;
+		arg[0] = a;
 	}
 	
 	public String toString(){
