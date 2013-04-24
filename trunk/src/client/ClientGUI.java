@@ -27,7 +27,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private JMenuBar menuBar;
 	private Thread socketThread;
 	private Client client;
-	private List<String> files;
+	private String[] files;
 	private JTextArea textArea;
 
 	public ClientGUI(Client client){
@@ -104,7 +104,7 @@ public class ClientGUI extends JFrame implements Observer{
 	
 	private void openFile(){
 		String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
-		        "Open file", JOptionPane.QUESTION_MESSAGE, null, files.toArray(), files.get(0));
+		        "Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
 		String text = client.openFile(selection);
 		
 		textArea.setText(text);
@@ -140,10 +140,10 @@ public class ClientGUI extends JFrame implements Observer{
 	}
 	
 	private void dummyLoginAnListFiles(){
-		files = new ArrayList<String>();
-		files.add("hej");
-		files.add("hoj");
-		files.add("huj");
+		files = new String[3];
+		files[0] = "hej";
+		files[1] = "hoj";
+		files[2] = "huj";
 	}
 	
 	private class TextAreaListener implements CaretListener, DocumentListener{

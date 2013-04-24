@@ -38,16 +38,9 @@ public class Client {
 
 	}
 	
-	public List<String> getFileList(){
+	public String[] getFileList(){
 		writer.getFileList();
-		reader.waitForFileList();
-		
-		List<String> list = new ArrayList<String>();
-		list.add("hoahoahoahoa.txt");
-		list.add("qewqweqwe.txt");
-		list.add("iopiopiop.txt");
-		list.add("pewpewpewpew.txt");
-		
+		String[] list = reader.waitForFileList();
 		return list;
 	}
 
