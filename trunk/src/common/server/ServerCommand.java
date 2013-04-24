@@ -6,4 +6,5 @@ public abstract class ServerCommand extends Command{
 	public ServerCommand(String[] arg){
 		super(arg);
 	}
+	public abstract void execute();
 }
