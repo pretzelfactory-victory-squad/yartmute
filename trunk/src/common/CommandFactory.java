@@ -1,7 +1,7 @@
 package common;
 
-import common.server.*;
-import common.client.*;
+import common.toclient.*;
+import common.toserver.*;
 
 
 public class CommandFactory {

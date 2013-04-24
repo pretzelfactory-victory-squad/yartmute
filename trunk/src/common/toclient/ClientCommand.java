@@ -1,4 +1,4 @@
-package common.client;
+package common.toclient;
 
 import common.Command;
 

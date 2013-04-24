@@ -1,4 +1,4 @@
-package common.server;
+package common.toserver;
 import common.Command;
 
 public abstract class ServerCommand extends Command{

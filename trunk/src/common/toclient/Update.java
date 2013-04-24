@@ -1,4 +1,4 @@
-package common.client;
+package common.toclient;
 
 
 public class Update extends ClientCommand {

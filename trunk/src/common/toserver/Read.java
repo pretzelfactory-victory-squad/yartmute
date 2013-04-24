@@ -1,4 +1,4 @@
-package common.server;
+package common.toserver;
 
 
 public class Read extends ServerCommand {

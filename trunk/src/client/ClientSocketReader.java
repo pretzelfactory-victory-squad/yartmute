@@ -10,7 +10,7 @@ import java.util.List;
 
 import common.Command;
 import common.CommandFactory;
-import common.server.ListCommand;
+import common.toserver.ListCommand;
 
 public class ClientSocketReader{
 

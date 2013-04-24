@@ -10,7 +10,7 @@ import java.util.List;
 
 import common.Command;
 import common.CommandFactory;
-import common.server.ServerCommand;
+import common.toserver.ServerCommand;
 
 public class ServerSocketThread implements Runnable {
 	private Socket s = null;
