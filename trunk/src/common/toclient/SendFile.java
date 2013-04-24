@@ -19,7 +19,15 @@ public class SendFile extends ClientCommand {
 		return null;
 	}
 	
-	public String unescape(String string){
+	private String escape(String string) {
+		
+		return null;
+		/*string.replace("\", newChar)
+		return;*/
+	}
+	
+	private String unescape(String string) {
+		
 		return null;
 		/*string.replace("\", newChar)
 		return;*/

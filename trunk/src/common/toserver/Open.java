@@ -1,6 +1,9 @@
 package common.toserver;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import common.Command;
@@ -30,7 +33,7 @@ public class Open extends ServerCommand {
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 	
 	
