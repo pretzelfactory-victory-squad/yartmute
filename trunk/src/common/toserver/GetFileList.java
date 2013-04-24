@@ -1,13 +1,13 @@
 package common.toserver;
 
 
-public class ListCommand extends ServerCommand {
+public class GetFileList extends ServerCommand {
 
-	public ListCommand(String[] arg) {
+	public GetFileList(String[] arg) {
 		super(arg);
 		type = "LIST";
 	}
-	public ListCommand(){
+	public GetFileList(){
 		super(null);
 		type = "LIST";	
 	}

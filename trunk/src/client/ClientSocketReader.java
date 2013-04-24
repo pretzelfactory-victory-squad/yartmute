@@ -10,7 +10,7 @@ import java.util.List;
 
 import common.Command;
 import common.CommandFactory;
-import common.toserver.ListCommand;
+import common.toserver.GetFileList;
 
 public class ClientSocketReader{
 
@@ -72,7 +72,7 @@ public class ClientSocketReader{
 				for(Command c : commands){
 					if(c instanceof List){
 						wait = false;
-						return ((ListCommand)c).getFileList();
+						return ((GetFileList)c).getFileList();
 					}
 				}
 				wait();

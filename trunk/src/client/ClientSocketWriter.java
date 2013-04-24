@@ -14,7 +14,7 @@ public class ClientSocketWriter {
 		writer = new BufferedWriter(new OutputStreamWriter(os));
 	}
 	public void getFileList(){
-		sendCommand(new GetFileList());
+		sendCommand(new SendFileList());
 	}
 	public void sendCommand(ClientCommand command){
 		try {
