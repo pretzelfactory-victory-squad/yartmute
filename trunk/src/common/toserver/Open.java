@@ -1,6 +1,13 @@
 package common.toserver;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
+
+import common.Command;
+import common.toclient.SendFile;
+
+import server.ServerDoc;
+import server.ServerDocHandler;
 
 
 public class Open extends ServerCommand {
@@ -16,8 +23,14 @@ public class Open extends ServerCommand {
 
 	@Override
 	public void execute(BufferedWriter writer) {
-		// TODO Auto-generated method stub
-		
+		ServerDoc doc = ServerDocHandler.getDoc(arg[0]);
+		Command c = new SendFile(doc.getDoc());
+		try {
+			writer.write(c.toString());
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
