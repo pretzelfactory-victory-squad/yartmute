@@ -8,4 +8,11 @@ public class Close extends ServerCommand {
 		type = "CLOSE";
 	}
 
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
 }

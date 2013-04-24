@@ -8,4 +8,10 @@ public class Write extends ServerCommand {
 		type = "WRITE";
 	}
 
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

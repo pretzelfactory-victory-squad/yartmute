@@ -11,5 +11,10 @@ public class List extends ServerCommand {
 		super(null);
 		type = "LIST";	
 	}
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -8,4 +8,10 @@ public class Read extends ServerCommand {
 		type = "READ";
 	}
 
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

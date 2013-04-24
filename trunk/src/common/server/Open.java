@@ -7,6 +7,12 @@ public class Open extends ServerCommand {
 		super(arg);
 		type = "OPEN";
 	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }
