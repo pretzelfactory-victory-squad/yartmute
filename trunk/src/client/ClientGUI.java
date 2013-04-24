@@ -2,12 +2,14 @@ package client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.Action;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -111,7 +113,12 @@ public class ClientGUI extends JFrame implements Observer{
 	}
 
 	private void uploadFile(){
-
+		final JFileChooser fc = new JFileChooser();
+		int returnVal = fc.showOpenDialog(this);
+		
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+		}
 	}
 	
 	private void insertCharacter(char c){
