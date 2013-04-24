@@ -18,7 +18,6 @@ public class ClientSocketWriter {
 	public void sendCommand(ServerCommand command){
 		try {
 			writer.write(command.toString());
-			writer.newLine();
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

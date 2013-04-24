@@ -22,6 +22,7 @@ public class Open extends ServerCommand {
 	
 	public Open(String s){
 		super(s);
+		type = "OPEN";
 	}
 
 	@Override

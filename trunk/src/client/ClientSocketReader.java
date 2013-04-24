@@ -63,19 +63,22 @@ public class ClientSocketReader{
 		try {
 			System.out.println("Command received: "+line);
 			commands.add(CommandFactory.getCommand(line));
-			notifyAll();
+			synchronized(this){
+				notifyAll();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 
-	private synchronized Command waitForCommand(String type) {
+	private Command waitForCommand(String type) {
 		String[] empty = {};
 		try {
 			boolean wait = true;
 			while(wait){
 				for(Command c : commands){
+					//System.out.println("type:"+c.getType()+" = "+type);
 					if(c.getType().equals(type)){
 						wait = false;
 						commands.remove(c);
@@ -83,7 +86,9 @@ public class ClientSocketReader{
 					}
 				}
 				System.out.println("Waiting for response");
-				wait();
+				synchronized(this){
+					wait();
+				}
 			}
 			return null;
 		} catch (InterruptedException e) {
@@ -93,7 +98,7 @@ public class ClientSocketReader{
 	}
 	
 	public String[] waitForFileList(){
-		SendFileList cmd = (SendFileList)waitForCommand("SendFileList");
+		SendFileList cmd = (SendFileList)waitForCommand("SLIST");
 		return cmd.getFileList();
 	}
 	

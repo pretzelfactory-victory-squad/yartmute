@@ -46,8 +46,7 @@ public class Client {
 	
 	public String[] getFileList(){
 		writer.getFileList();
-		String[] list = {"",""};
-		//String[] list = reader.waitForFileList();
+		String[] list = reader.waitForFileList();
 		return list;
 	}
 

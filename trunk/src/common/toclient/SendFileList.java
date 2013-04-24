@@ -12,6 +12,6 @@ public class SendFileList extends ClientCommand {
 	}
 
 	public String[] getFileList(){
-		return arg[0].split("|");
+		return arg[0].split("\\|");
 	}
 }
