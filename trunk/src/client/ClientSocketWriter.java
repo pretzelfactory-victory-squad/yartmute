@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import common.client.ClientCommand;
-import common.client.GetFileList;
+import common.toserver.GetFileList;
+import common.toserver.ServerCommand;
 
 public class ClientSocketWriter {
 	private BufferedWriter writer;
@@ -14,9 +14,9 @@ public class ClientSocketWriter {
 		writer = new BufferedWriter(new OutputStreamWriter(os));
 	}
 	public void getFileList(){
-		sendCommand(new SendFileList());
+		sendCommand(new GetFileList());
 	}
-	public void sendCommand(ClientCommand command){
+	public void sendCommand(ServerCommand command){
 		try {
 			writer.write(command.toString());
 			writer.newLine();
