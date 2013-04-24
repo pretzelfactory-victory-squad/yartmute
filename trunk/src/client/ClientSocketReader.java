@@ -52,13 +52,16 @@ public class ClientSocketReader{
 	}
 	
 	public void waitForUpdate() throws IOException{
+		System.out.println("waiting for server response");
 		String line = reader.readLine();
+		System.out.println("line received"+line);
 		if(line == null){
 			isConnected = false;
 			return;
 		}
 		
 		try {
+			System.out.println("Command received: "+line);
 			commands.add(CommandFactory.getCommand(line));
 			notifyAll();
 		} catch (Exception e) {
@@ -67,7 +70,7 @@ public class ClientSocketReader{
 		
 	}
 
-	private Command waitForCommand(String type) {
+	private synchronized Command waitForCommand(String type) {
 		String[] empty = {};
 		try {
 			boolean wait = true;
@@ -75,9 +78,11 @@ public class ClientSocketReader{
 				for(Command c : commands){
 					if(c.getType().equals(type)){
 						wait = false;
+						commands.remove(c);
 						return c;
 					}
 				}
+				System.out.println("Waiting for response");
 				wait();
 			}
 			return null;

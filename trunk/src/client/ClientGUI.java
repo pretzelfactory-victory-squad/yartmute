@@ -23,6 +23,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
+import server.Main;
+
 public class ClientGUI extends JFrame implements Observer{
 	private JMenuBar menuBar;
 	private Thread socketThread;
@@ -138,10 +140,9 @@ public class ClientGUI extends JFrame implements Observer{
 	}
 	
 	private void dummyLoginAnListFiles(){
-		files = new String[3];
-		files[0] = "hej";
-		files[1] = "hoj";
-		files[2] = "huj";
+		if(client.connect("localhost", 3790)){
+			files = client.getFileList();
+		}
 	}
 	
 	private class TextAreaListener implements CaretListener, DocumentListener{

@@ -18,6 +18,7 @@ public class Command {
 			b.append(':');
 			b.append(s);
 		}
+		b.append('\n');
 		return b.toString();
 	}
 	public String getType(){

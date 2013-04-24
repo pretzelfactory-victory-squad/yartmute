@@ -10,6 +10,8 @@ public class CommandFactory {
 		switch(arg[0]){
 		case "LIST":
 			return new GetFileList();
+		case "SLIST":
+			return new SendFileList(removeFirst(arg));
 		case "CLOSE":
 			return new Close(removeFirst(arg));
 		case "OPEN":
