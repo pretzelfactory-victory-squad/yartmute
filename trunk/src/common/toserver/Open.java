@@ -1,5 +1,7 @@
 package common.toserver;
 
+import java.io.BufferedWriter;
+
 
 public class Open extends ServerCommand {
 
@@ -7,9 +9,13 @@ public class Open extends ServerCommand {
 		super(arg);
 		type = "OPEN";
 	}
+	
+	public Open(String s){
+		super(s);
+	}
 
 	@Override
-	public void execute() {
+	public void execute(BufferedWriter writer) {
 		// TODO Auto-generated method stub
 		
 	}

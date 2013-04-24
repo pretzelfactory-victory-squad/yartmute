@@ -7,5 +7,9 @@ public class Update extends ClientCommand {
 		super(arg);
 		type = "UPDATE";
 	}
+	
+	public Update(String s){
+		super(s);
+	}
 
 }

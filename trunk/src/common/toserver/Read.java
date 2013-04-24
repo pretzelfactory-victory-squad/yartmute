@@ -1,5 +1,7 @@
 package common.toserver;
 
+import java.io.BufferedWriter;
+
 
 public class Read extends ServerCommand {
 
@@ -7,9 +9,12 @@ public class Read extends ServerCommand {
 		super(arg);
 		type = "READ";
 	}
+	public Read(String s){
+		super(s);
+	}
 
 	@Override
-	public void execute() {
+	public void execute(BufferedWriter writer) {
 		// TODO Auto-generated method stub
 		
 	}
