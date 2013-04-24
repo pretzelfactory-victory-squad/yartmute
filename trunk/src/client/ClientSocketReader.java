@@ -34,6 +34,7 @@ public class ClientSocketReader{
 			return;
 		}
 		
+		isConnected = true;
 		thread = new Thread(new Runnable(){
 			public void run(){
 				try {

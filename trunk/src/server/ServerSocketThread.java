@@ -34,10 +34,17 @@ public class ServerSocketThread implements Runnable {
 	private void waitForCommand(){
 		while(true){
 			try {
-				ServerCommand command = (ServerCommand) CommandFactory.getCommand(reader.readLine());
+				String line = reader.readLine();
+				if(line == null){
+					System.out.println("Client disconnected");	//TODO: close document properly
+					s.close();
+					return;
+				}
+				ServerCommand command = (ServerCommand) CommandFactory.getCommand(line);
 				command.execute(writer);
 			} catch (Exception e) {
 				e.printStackTrace();
+				System.exit(-1);
 			}
 		}
 	}

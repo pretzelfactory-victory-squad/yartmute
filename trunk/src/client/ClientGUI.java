@@ -173,4 +173,9 @@ public class ClientGUI extends JFrame implements Observer{
 
 	    }
 	}
+	
+	public static void main(String[] args) {
+		Client client = new Client();
+		new ClientGUI(client);
+	}
 }
