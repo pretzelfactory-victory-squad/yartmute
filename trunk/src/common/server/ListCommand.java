@@ -1,13 +1,13 @@
 package common.server;
 
 
-public class List extends ServerCommand {
+public class ListCommand extends ServerCommand {
 
-	public List(String[] arg) {
+	public ListCommand(String[] arg) {
 		super(arg);
 		type = "LIST";
 	}
-	public List(){
+	public ListCommand(){
 		super(null);
 		type = "LIST";	
 	}
@@ -16,5 +16,7 @@ public class List extends ServerCommand {
 		// TODO Auto-generated method stub
 		
 	}
-
+	public String[] getFileList(){
+		return arg[0].split("|");
+	}
 }

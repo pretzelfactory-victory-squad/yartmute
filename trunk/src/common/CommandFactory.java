@@ -9,7 +9,7 @@ public class CommandFactory {
 		String[] arg = s.split(":");
 		switch(arg[0]){
 		case "LIST":
-			return new List(removeFirst(arg));
+			return new ListCommand(removeFirst(arg));
 		case "CLOSE":
 			return new Close(removeFirst(arg));
 		case "OPEN":

@@ -133,7 +133,7 @@ public class ClientGUI extends JFrame implements Observer{
 		        count = i+1;
 		    }
 		}
-		int pos = length-count;
+		int pos = length - count;
 		System.out.println("line: "+line+", pos: "+pos);
 		int[] result = {line, pos};
 		return result;
