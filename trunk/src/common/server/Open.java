@@ -1,8 +1,7 @@
 package common.server;
 
-import common.Command;
 
-public class Open extends Command {
+public class Open extends ServerCommand {
 
 	public Open(String[] arg) {
 		super(arg);

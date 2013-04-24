@@ -1,8 +1,7 @@
 package common.client;
 
-import common.Command;
 
-public class Update extends Command {
+public class Update extends ClientCommand {
 
 	public Update(String[] arg) {
 		super(arg);

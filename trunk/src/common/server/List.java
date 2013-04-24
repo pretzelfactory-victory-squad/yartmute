@@ -1,8 +1,7 @@
 package common.server;
 
-import common.Command;
 
-public class List extends Command {
+public class List extends ServerCommand {
 
 	public List(String[] arg) {
 		super(arg);

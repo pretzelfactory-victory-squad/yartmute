@@ -1,13 +1,13 @@
 package common;
 
-public abstract class Command {
+public class Command {
 	protected String type;
 	private String[] arg;
+	
 	
 	public Command(String[] arg){
 		this.arg = arg;
 	}
-	
 	public String toString(){
 		StringBuilder b = new StringBuilder(type);
 		for(String s:arg){
@@ -19,5 +19,4 @@ public abstract class Command {
 	public String getType(){
 		return type;
 	}
-	
 }

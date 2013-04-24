@@ -1,8 +1,7 @@
 package common.server;
 
-import common.Command;
 
-public class Write extends Command {
+public class Write extends ServerCommand {
 
 	public Write(String[] arg) {
 		super(arg);
