@@ -14,7 +14,7 @@ public class ServerDocHandler {
 	}
 	
 	public static synchronized ServerDoc getDoc(String filename){
-		return null;	
+		return new ServerDoc(filename);	
 	}
 	
 	public static synchronized void save(){
@@ -26,8 +26,8 @@ public class ServerDocHandler {
 		 * Dummy code, glöm inte att faktiskt implementera
 		 */
 		List<String> fileList = new ArrayList<String>();
-		fileList.add("Hej.dock");
-		fileList.add("Haj.dack");
+		fileList.add("Hej.txt");
+		fileList.add("Haj.txt");
 		return fileList;	
 	}
 }

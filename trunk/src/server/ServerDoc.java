@@ -7,16 +7,18 @@ public class ServerDoc {
 
 	private long version;
 	private List<String> doc;
+	private String fileName;
 
-	private ServerDoc() {
+	public ServerDoc(String fileName) {
+		this.fileName = fileName;
 		doc = new ArrayList<String>();
 	}
 
 	public synchronized String getDoc() {
-		String output = "";
-		for (String s : doc) {
+		String output = "SHEEEEEEIT";
+		/*for (String s : doc) {
 			output += s;
-		}
+		}*/
 		return output;
 	}
 

@@ -5,9 +5,11 @@ public class SendFile extends ClientCommand {
 
 	public SendFile(String[] arg) {
 		super(arg);
+		this.type = "SFILE";
 	}
 	public SendFile(String arg) {
 		super(arg);
+		this.type = "SFILE";
 	}
 
 	public String getFile(){
