@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerDocHandler {
-	File fileListFile = null;
-	List<String> fileList = new ArrayList<String>();
+	static List<String> fileList = new ArrayList<String>();
 		
 	public ServerDocHandler(){
-		fileListFile = new File("fiellist");
-		//fileListFile.
+		 String path = "./files"; 
+		 File folder = new File(path);
+		 File[] listOfFiles = folder.listFiles();
+		 for(File f:listOfFiles) {
+			 fileList.add(f.getName());
+		 }
 	}
 	
 	public static synchronized ServerDoc getDoc(String filename){
@@ -22,12 +25,7 @@ public class ServerDocHandler {
 	}
 	
 	public static List<String> getDocList(){
-		/*
-		 * Dummy code, glöm inte att faktiskt implementera
-		 */
-		List<String> fileList = new ArrayList<String>();
-		fileList.add("Hej.txt");
-		fileList.add("Haj.txt");
+		
 		return fileList;	
 	}
 }

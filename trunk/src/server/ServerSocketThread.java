@@ -46,7 +46,7 @@ public class ServerSocketThread implements Runnable {
 				command.execute(writer);
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.exit(-1);
+				//System.exit(-1);		//Det är lite väl dramatiskt att stänga av programmet när kommandot inte känns igen :)
 			}
 		}
 	}
