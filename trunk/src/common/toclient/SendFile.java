@@ -13,12 +13,15 @@ public class SendFile extends ClientCommand {
 	}
 
 	public String getFile(){
-		/*String[] split1 = arg[0].":");
-		String filename = split1[0];
-		String contents = unescape(split1[1]);
-		
-		return "hej hje";*/
-		return null;
+		String filename = arg[0];
+		long version = Long.parseLong(arg[1]);
+		String contents = arg[2];
+		return contents;
+	}
+	
+	public String toString() {
+		String command = "DOC__:" + arg[0] + ":" + arg[1] + ":" + arg[2];
+		return command;		
 	}
 	
 	private String escape(String string) {

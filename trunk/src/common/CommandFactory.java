@@ -22,6 +22,8 @@ public class CommandFactory {
 			return new Write(removeFirst(arg));
 		case "UPDATE":
 			return new Update(removeFirst(arg));
+		case "DOC__":
+			return new SendFile(removeFirst(arg));
 		default:
 			throw new Exception("Can't identify command.");
 		}
