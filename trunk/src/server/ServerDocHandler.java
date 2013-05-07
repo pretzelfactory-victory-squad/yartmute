@@ -3,29 +3,42 @@ package server;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class ServerDocHandler {
-	static List<String> fileList = new ArrayList<String>();
-		
+	static private TreeMap<String, ServerDoc> fileList = new TreeMap<String, ServerDoc>();
+	
+	
 	public ServerDocHandler(){
 		 String path = "./files"; 
 		 File folder = new File(path);
 		 File[] listOfFiles = folder.listFiles();
 		 for(File f:listOfFiles) {
-			 fileList.add(f.getName());
+			 fileList.put(f.getName(), new ServerDoc(f.getName()));
 		 }
 	}
 	
 	public static synchronized ServerDoc getDoc(String filename){
-		return new ServerDoc(filename);	
+		if(fileList.containsKey(filename)){
+			return fileList.get(filename);
+		} else {
+			ServerDoc doc = new ServerDoc(filename);
+			fileList.put(filename, doc);
+			return doc;
+		}
 	}
 	
-	public static synchronized void save(){
-		
+	public static synchronized void saveAll(){
+		/*
+		Set s = fileList.values();
+		for(ServerDoc d: s){
+			
+		}
+		*/
 	}
 	
-	public static List<String> getDocList(){
-		
-		return fileList;	
+	public static List<String> getDocList(){	
+		return new ArrayList<String>(fileList.keySet());	
 	}
 }

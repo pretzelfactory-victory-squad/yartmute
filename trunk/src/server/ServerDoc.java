@@ -56,9 +56,16 @@ public class ServerDoc {
 	public synchronized void write(String filename) {
 
 	}
-
-	public static synchronized String getFileName() {
-		return null;
-		//return fileName;
+	public void save(){
+		// TODO: Save current document. 
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public String toString(){
+		return getFileName();
+	}
+	public boolean equals(Object obj){
+		return fileName.equals(obj.toString());
 	}
 }
