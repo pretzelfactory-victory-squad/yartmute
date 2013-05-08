@@ -2,7 +2,7 @@ package common;
 
 public class Command {
 	protected String type;
-	protected String[] arg;
+	private String[] arg;
 	
 	public Command(String[] arg){
 		this.arg = arg;
@@ -16,12 +16,29 @@ public class Command {
 		StringBuilder b = new StringBuilder(type);
 		for(String s:arg){
 			b.append(':');
-			b.append(s);
+			b.append(escape(s));
 		}
 		b.append('\n');
 		return b.toString();
 	}
 	public String getType(){
 		return type;
+	}
+	public String getArg(int i){
+		return arg[i];
+	}
+	
+	public static String escape(String string) {
+		if(string == null){
+			return null;
+		}
+		return string.replace(':','>').replace('\n','<');
+	}
+	
+	public static String unescape(String string) {
+		if(string == null){
+			return null;
+		}
+		return string.replace('<', '\n').replace('>',':');
 	}
 }

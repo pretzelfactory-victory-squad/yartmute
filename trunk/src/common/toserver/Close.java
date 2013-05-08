@@ -4,10 +4,11 @@ import java.io.BufferedWriter;
 
 
 public class Close extends ServerCommand {
+	public static final String TYPE = "CLOSE";
 
 	public Close(String[] arg) {
 		super(arg);
-		type = "CLOSE";
+		type = TYPE;
 	}
 	
 	public Close(String s){

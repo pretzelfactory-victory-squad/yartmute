@@ -25,7 +25,7 @@ public class ServerSocketHandler {
 				socket = serverSocket.accept();
 				System.out.println("Connected to "+socket.getInetAddress());
 				
-				Thread t = new Thread(new ServerSocketThread(socket));
+				Thread t = new Thread(new ServerSocketThread(socket), "ServerSocketThread");
 				t.start();
 				
 			} catch (IOException e1) {

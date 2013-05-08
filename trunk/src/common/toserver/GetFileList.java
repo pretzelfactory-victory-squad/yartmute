@@ -10,18 +10,18 @@ import server.ServerDocHandler;
 
 
 public class GetFileList extends ServerCommand {
+	public static final String TYPE = "LIST_";
 
 	public GetFileList() {
 		super(new String[0]);
-		this.type = "LIST";
+		this.type = TYPE;
 	}
 	@Override
 	public void execute(BufferedWriter writer) {
 		List<String> l = ServerDocHandler.getDocList();
-		String arg = "";
-		// FIXA BORT SISTA PIPE:N ev.
-		for(String s:l){
-			arg = arg + s + "|";
+		String arg = l.get(0);
+		for(int i=1; i<l.size(); i++){
+			arg += "|" + l.get(i);
 		}
 		SendFileList c = new SendFileList(arg);
 		try {

@@ -47,7 +47,7 @@ public class ClientSocketReader{
 					client.closeConnection();
 				}
 			}
-		});
+		}, "ClientSocketReader");
 		thread.start();
 	}
 	
@@ -78,15 +78,16 @@ public class ClientSocketReader{
 			boolean wait = true;
 			while(wait){
 				for(Command c : commands){
-					//System.out.println("type:"+c.getType()+" = "+type);
+					System.out.println("type:"+c.getType()+" = "+type);
 					if(c.getType().equals(type)){
 						wait = false;
 						commands.remove(c);
 						return c;
 					}
 				}
-				System.out.println("Waiting for response");
+				System.out.println("Waiting for "+type+" command");
 				synchronized(this){
+					System.out.println(Thread.currentThread().getName()+": Waiting for "+type+" response");
 					wait();
 				}
 			}
@@ -98,12 +99,12 @@ public class ClientSocketReader{
 	}
 	
 	public String[] waitForFileList(){
-		SendFileList cmd = (SendFileList)waitForCommand("SLIST");
+		SendFileList cmd = (SendFileList)waitForCommand(SendFileList.TYPE);
 		return cmd.getFileList();
 	}
 	
 	public String waitForFile() {
-		SendFile cmd = (SendFile)waitForCommand("SendFile");
+		SendFile cmd = (SendFile)waitForCommand(SendFile.TYPE);
 		return cmd.getFile();
 	}
 }

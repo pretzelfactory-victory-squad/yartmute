@@ -4,10 +4,11 @@ import java.io.BufferedWriter;
 
 
 public class Read extends ServerCommand {
+	public static final String TYPE = "READ_";
 
 	public Read(String[] arg) {
 		super(arg);
-		type = "READ";
+		type = TYPE;
 	}
 	public Read(String s){
 		super(s);

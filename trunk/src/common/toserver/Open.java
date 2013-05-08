@@ -14,22 +14,23 @@ import server.ServerDocHandler;
 
 
 public class Open extends ServerCommand {
+	public static final String TYPE = "OPEN_";
 
 	public Open(String[] arg) {
 		super(arg);
-		type = "OPEN";
+		type = TYPE;
 	}
 	
 	public Open(String s){
 		super(s);
-		type = "OPEN";
+		type = TYPE;
 	}
 
 	@Override
 	public void execute(BufferedWriter writer) {
-		ServerDoc doc = ServerDocHandler.getDoc(arg[0]);
+		ServerDoc doc = ServerDocHandler.getDoc(getArg(0));
 		String[] s = new String[3];
-		s[0] = arg[0];
+		s[0] = getArg(0);
 		s[1] = String.valueOf(doc.getVerNbr());
 		s[2] = doc.getDoc();
 		Command c = new SendFile(s);

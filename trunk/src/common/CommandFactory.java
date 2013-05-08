@@ -7,22 +7,27 @@ import common.toserver.*;
 public class CommandFactory {
 	public static Command getCommand(String s) throws Exception{
 		String[] arg = s.split(":");
+		
+		for(int i=0; i<arg.length; i++){
+			arg[i] = Command.unescape(arg[i]);
+		}
+		
 		switch(arg[0]){
-		case "LIST":
+		case GetFileList.TYPE:
 			return new GetFileList();
-		case "SLIST":
+		case SendFileList.TYPE:
 			return new SendFileList(removeFirst(arg));
-		case "CLOSE":
+		case Close.TYPE:
 			return new Close(removeFirst(arg));
-		case "OPEN":
+		case Open.TYPE:
 			return new Open(removeFirst(arg));
-		case "READ":
+		case Read.TYPE:
 			return new Read(removeFirst(arg));
-		case "WRITE":
+		case Write.TYPE:
 			return new Write(removeFirst(arg));
-		case "UPDATE":
+		case Update.TYPE:
 			return new Update(removeFirst(arg));
-		case "DOC__":
+		case SendFile.TYPE:
 			return new SendFile(removeFirst(arg));
 		default:
 			throw new Exception("Can't identify command.");
