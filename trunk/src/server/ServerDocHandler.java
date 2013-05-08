@@ -18,7 +18,7 @@ public class ServerDocHandler {
 			 fileList.put(f.getName(), new ServerDoc(f.getName()));
 		 }
 	}
-	
+
 	public static synchronized ServerDoc getDoc(String filename){
 		if(fileList.containsKey(filename)){
 			return fileList.get(filename);
@@ -34,6 +34,12 @@ public class ServerDocHandler {
 		for(ServerDoc d: s){
 			d.save();
 		}	
+	}
+	public static synchronized void closeAll(){
+		Collection<ServerDoc> s = fileList.values();
+		for(ServerDoc d: s){
+			d.close();
+		}
 	}
 	
 	public static List<String> getDocList(){	
