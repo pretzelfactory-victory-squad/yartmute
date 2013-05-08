@@ -2,8 +2,8 @@ package server;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
 
 public class ServerDocHandler {
@@ -30,12 +30,10 @@ public class ServerDocHandler {
 	}
 	
 	public static synchronized void saveAll(){
-		/*
-		Set s = fileList.values();
+		Collection<ServerDoc> s = fileList.values();
 		for(ServerDoc d: s){
-			
-		}
-		*/
+			d.save();
+		}	
 	}
 	
 	public static List<String> getDocList(){	
