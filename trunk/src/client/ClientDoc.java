@@ -14,6 +14,8 @@ public class ClientDoc extends Observable implements Observer{
 	private StringBuilder text;
 	private long version;
 	private ClientSocketReader reader;
+	private int caretPosition;
+	
 	public ClientDoc(ClientSocketReader r, String text){
 		reader = r;
 		reader.addObserver(this);
@@ -36,6 +38,9 @@ public class ClientDoc extends Observable implements Observer{
 			int end = convertToSlot(c.getLineEnd(), c.getSlotEnd());
 			String s = text.toString();
 			text.replace(start, end, c.getText());
+			if(start <= end){
+				caretPosition += c.getText().length();
+			}
 			setChanged();
 			notifyObservers();
 		}
@@ -51,5 +56,11 @@ public class ClientDoc extends Observable implements Observer{
 		result += slot;
 		System.out.println("pos: "+result);
 		return result;
+	}
+	public void setCaretPosition(int position) {
+		caretPosition = position;
+	}
+	public int getCaretPosition() {
+		return caretPosition;
 	}
 }

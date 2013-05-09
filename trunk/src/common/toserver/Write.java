@@ -24,6 +24,10 @@ public class Write extends ServerCommand {
 	
 	public void modify(List<Write> list){//inte färdig
 		//TODO: Implement commando adjustment. Increment version by 1.
+		if(list.size() == 0){
+			return;
+		}
+		/*
 		String[] modifiedWrite = new String[6]; 
 		modifiedWrite[5] = list.get(list.size()-1).getArg(5);
 		int modLineStart = Integer.valueOf(modifiedWrite[0]);
@@ -34,7 +38,7 @@ public class Write extends ServerCommand {
 			if(modLineStart < Integer.valueOf(w.getArg(0))){
 				int lineBreaks = w.getArg(4).split("\n").length;
 			}
-		}
+		}*/
 		
 	}
 	@Override

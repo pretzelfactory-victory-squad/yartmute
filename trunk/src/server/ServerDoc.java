@@ -98,7 +98,6 @@ public class ServerDoc {
 			out.newLine();
 			for(StringBuilder s : doc){
 				out.write(s.toString());
-				out.newLine();
 			}
 			out.flush();
 			out.close();
