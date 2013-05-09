@@ -24,7 +24,7 @@ public class Write extends ServerCommand {
 	}
 	@Override
 	public void execute(BufferedWriter writer, ServerDoc doc) throws OutOfSyncException {
-		// TODO Auto-generated method stub
+		doc.write(this);
 		
 	}
 
