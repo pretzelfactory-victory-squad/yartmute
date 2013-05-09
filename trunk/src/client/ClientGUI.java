@@ -190,7 +190,12 @@ public class ClientGUI extends JFrame implements Observer{
 	        //Plain text components do not fire these events
 		}
 		public void insertUpdate(DocumentEvent e) {
+			if(previous == null){
+				savePrevious();
+				return;
+			}
 			savePrevious();
+			
 			int offset = e.getOffset();
 			int length = e.getLength();
 			
@@ -199,6 +204,10 @@ public class ClientGUI extends JFrame implements Observer{
 			
 			int[] start = convertToLineAndPos(textBefore);
 			int[] end = convertToLineAndPos(insertion);
+			end[0]+=start[0];
+			if(start[0] == end[0]){
+				end[1]+=start[1];
+			}
 			
 			client.queueUpdate(start[0], end[0], start[1], end[1], insertion);
 	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);	
