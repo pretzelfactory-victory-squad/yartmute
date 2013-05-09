@@ -50,7 +50,7 @@ public class ClientGUI extends JFrame implements Observer{
 		createMenu();
 		createTextArea();
 		
-		dummyLoginAnListFiles();
+		dummyLoginAndOpenFirst();
 		
 		this.setSize(800, 600);
 		setVisible(true);
@@ -165,9 +165,17 @@ public class ClientGUI extends JFrame implements Observer{
 		textArea.setText(content);
 	}
 	
-	private void dummyLoginAnListFiles(){
+	private void dummyLoginAndListFiles(){
 		if(client.connect("localhost", 3790)){
 			files = client.getFileList();
+		}
+	}
+	private void dummyLoginAndOpenFirst(){
+		if(client.connect("localhost", 3790)){
+			files = client.getFileList();
+			ClientDoc doc = client.openFile(files[0]);
+			doc.addObserver(this);
+			insertNewFile(doc.getText());
 		}
 	}
 	
