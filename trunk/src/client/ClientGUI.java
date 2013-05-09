@@ -41,7 +41,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private Client client;
 	private String[] files;
 	private JTextArea textArea;
-	private ClientSocketReader reader;
+	private ClientDoc doc;
 
 	public ClientGUI(Client client){
 		this.client = client;
@@ -111,8 +111,6 @@ public class ClientGUI extends JFrame implements Observer{
 		System.out.println("host: "+host+", port: "+port);
 		
 		if(client.connect(host, port)){
-			reader = client.getReader();
-			reader.addObserver(this);
 			files = client.getFileList();
 		}
 	}
@@ -120,7 +118,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private void openFile(){
 		String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
 		        "Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
-		ClientDoc doc = client.openFile(selection);
+		doc = client.openFile(selection);
 		doc.addObserver(this);
 		insertNewFile(doc.getText());
 	}
@@ -136,29 +134,9 @@ public class ClientGUI extends JFrame implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		for(Command c : reader.getCommands()){
-			if(c.getType().equals(Update.TYPE)){
-				Update u = (Update)c;
-				
-				int start = convertToSlot(u.getLineStart(), u.getSlotStart());
-				int end = convertToSlot(u.getLineEnd(), u.getSlotEnd());
-				
-				textArea.replaceRange(u.getText(), start, end);
-			}
-		}
-	}
-	
-	private int convertToSlot(int line, int slot) {
-		String text = textArea.getText();
-		int countLine = 0;
-		int result = 0;
-		while(countLine < line){
-			result = text.indexOf('\n', result)+1;
-		    countLine++;
-		}
-		result += slot;
-		System.out.println("pos: "+result);
-		return result;
+		JTextArea a = textArea;
+		ClientDoc doc = this.doc;
+		textArea.setText("w"+doc.getText());
 	}
 	
 	private int[] convertToLineAndSlot(String text) {
@@ -189,7 +167,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private void dummyLoginAndOpenFirst(){
 		if(client.connect("localhost", 3790)){
 			files = client.getFileList();
-			ClientDoc doc = client.openFile(files[0]);
+			doc = client.openFile(files[0]);
 			doc.addObserver(this);
 			insertNewFile(doc.getText());
 		}
@@ -207,7 +185,7 @@ public class ClientGUI extends JFrame implements Observer{
 		public void caretUpdate(CaretEvent event) {
 			try {
 				int[] a = convertToLineAndSlot(textArea.getText(0, event.getDot()));
-				int pos = convertToSlot(a[0], a[1]);
+				//int pos = convertToSlot(a[0], a[1]);
 				//update(null, null);
 				//System.out.println("from "+event.getDot()+" to "+a[0]+","+a[1]+" back to "+pos);
 				

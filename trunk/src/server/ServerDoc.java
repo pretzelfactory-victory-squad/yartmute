@@ -66,6 +66,9 @@ public class ServerDoc {
 					doc.add(new StringBuilder(line + "\n"));
 					line = br.readLine();
 				}
+				StringBuilder b = doc.get(doc.size()-1); // Removes last line feed that's added in the loop
+				b.delete(b.length()-1, b.length());
+				
 				System.out.println("Printing file '" + fileName + "'");
 				for (StringBuilder s : doc) {
 					System.out.println(s);

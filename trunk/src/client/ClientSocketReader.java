@@ -110,7 +110,13 @@ public class ClientSocketReader extends Observable{
 		return cmd.getFile();
 	}
 
-	public List<Command> getCommands() {
-		return commands;
+	public Command getCommand(String type) {
+		for(Command c: commands){
+			if(c.getType().equals(type)){
+				commands.remove(c);
+				return c;
+			}
+		}
+		return null;
 	}
 }

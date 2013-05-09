@@ -38,7 +38,7 @@ public class Client {
 	public ClientDoc openFile(String file){
 		writer.openFile(file);
 		String contents = reader.waitForFile();
-		doc = new ClientDoc(contents);
+		doc = new ClientDoc(reader, contents);
 		return doc;
 	}
 
