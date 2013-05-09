@@ -42,7 +42,9 @@ public class ServerSocketThread implements Runnable {
 				ServerCommand command = (ServerCommand) CommandFactory.getCommand(line);
 				command.execute(writer);
 			} catch (Exception e) {
-				doc.save();
+				if(doc!=null){
+					doc.save();
+				}
 				System.out.println("Client disconnected");
 				Thread.currentThread().interrupt();
 				return;
