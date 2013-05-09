@@ -208,6 +208,7 @@ public class ClientGUI extends JFrame implements Observer{
 		public void insertUpdate(DocumentEvent e) {
 			if(ignore){
 				System.out.println("insert ignored");
+				savePrevious();
 				return;
 			}
 			savePrevious();
@@ -244,9 +245,14 @@ public class ClientGUI extends JFrame implements Observer{
 			
 			int[] start = convertToLineAndSlot(textBefore);
 			int[] end = convertToLineAndSlot(insertion);
+			end[0] += start[0];
 			
-			client.queueUpdate(start[0], start[0]+end[0], start[1], end[1], "");
-	        System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+(start[0]+end[0])+", slot:"+start[1]+"-"+end[1]);
+			if(start[0] == end[0]){
+				end[1] += start[1];
+			}
+			
+			client.queueUpdate(start[0], end[0], start[1], end[1], "");
+	        System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
 			savePrevious();
 		}
 	}

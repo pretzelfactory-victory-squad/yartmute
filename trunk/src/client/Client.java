@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.Command.CommandArgumentException;
 import common.toserver.Open;
 import common.toserver.Write;
 
@@ -61,8 +62,12 @@ public class Client {
 	}
 
 	public void queueUpdate(int lineStart, int lineEnd, int slotStart, int slotEnd, String insertion) {
-		Write w = new Write(lineStart, lineEnd, slotStart, slotEnd, insertion, doc.getVersion());
-		writer.sendCommand(w);
+		try{
+			Write w = new Write(lineStart, lineEnd, slotStart, slotEnd, insertion, doc.getVersion());
+			writer.sendCommand(w);
+		}catch(CommandArgumentException e){
+			e.printStackTrace();
+		}
 	}
 
 	public ClientSocketReader getReader() {

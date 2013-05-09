@@ -148,7 +148,7 @@ public class ServerDoc {
 
 		if(lineStart != lineEnd || slotStart != slotEnd){
 			for(int i =lineStart+1; i <= lineEnd; i++){
-				doc.remove(i);
+				doc.remove(lineStart+1);
 			}
 
 			firstLine.replace(slotStart, firstLine.length(), lastLine.substring(slotEnd));

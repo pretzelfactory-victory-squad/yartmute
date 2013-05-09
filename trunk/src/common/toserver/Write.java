@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.util.List;
 
 import common.Command;
+import common.Command.CommandArgumentException;
 import common.toclient.Update;
 
 import server.ServerDoc;
@@ -13,8 +14,13 @@ import server.exceptions.OutOfSyncException;
 public class Write extends ServerCommand {
 	public static final String TYPE = "WRITE";
 
-	public Write(int lineStart, int lineEnd, int slotStart, int slotEnd, String text, long version){
+	public Write(int lineStart, int lineEnd, int slotStart, int slotEnd, String text, long version) throws CommandArgumentException{
 		this(new String[]{""+lineStart, ""+lineEnd, ""+slotStart, ""+slotEnd, text, ""+version});
+		if(lineEnd < lineStart){
+			throw new CommandArgumentException("lineStart can't be bigger than lineEnd ("+lineStart+" > "+lineEnd+")");
+		}else if(lineStart == lineEnd && slotEnd < slotStart){
+			throw new CommandArgumentException("slotStart can't be bigger than slotEnd on single line updates ("+slotStart+" > "+slotEnd+")");
+		}
 	}
 	
 	public Write(String[] arg) {

@@ -1,5 +1,7 @@
 package common;
 
+import java.io.IOException;
+
 public class Command {
 	protected String type;
 	protected String[] arg;
@@ -40,5 +42,12 @@ public class Command {
 			return null;
 		}
 		return string.replace('<', '\n').replace('>',':');
+	}
+	
+	public class CommandArgumentException extends IOException{
+		public CommandArgumentException(String message){
+			super(message);
+		}
+		
 	}
 }
