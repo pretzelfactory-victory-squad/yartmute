@@ -28,20 +28,12 @@ public class ServerDocHandler {
 			return doc;
 		}
 	}
-	
 	public static synchronized void saveAll(){
 		Collection<ServerDoc> s = fileList.values();
 		for(ServerDoc d: s){
 			d.save();
 		}	
 	}
-	public static synchronized void closeAll(){
-		Collection<ServerDoc> s = fileList.values();
-		for(ServerDoc d: s){
-			d.close();
-		}
-	}
-	
 	public static List<String> getDocList(){	
 		return new ArrayList<String>(fileList.keySet());	
 	}

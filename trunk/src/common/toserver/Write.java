@@ -1,6 +1,7 @@
 package common.toserver;
 
 import java.io.BufferedWriter;
+import java.util.List;
 
 
 public class Write extends ServerCommand {
@@ -15,6 +16,9 @@ public class Write extends ServerCommand {
 		type = TYPE;
 	}
 	
+	public void modify(List<Write> list){
+		//TODO: Implement commando adjustment. Increment version by 1.
+	}
 	@Override
 	public void execute(BufferedWriter writer) {
 		// TODO Auto-generated method stub

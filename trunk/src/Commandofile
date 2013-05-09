@@ -8,5 +8,5 @@ server listen commands:
 
 client listen commands:
 "LIST_:OBJECT1,OBJECT2:"			- Sends a comma seperated list. 
-"DOC__:FILENAME:VERSION:DOCUMENT:	- Sends a FILENAME=doc name, VERSION=long, DOCUMENT= utf-8 char stream.
-
+"SFILE:FILENAME:VERSION:DOCUMENT:	- Sends a FILENAME=doc name, VERSION=long, DOCUMENT= utf-8 char stream.
+"UPDAT:LINE:SLOT:VERSION:CHARACTERS:"
