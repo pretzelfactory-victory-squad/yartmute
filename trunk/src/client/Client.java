@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.toserver.Open;
+import common.toserver.Write;
 
 public class Client {
 	private Socket socket = null;
@@ -34,10 +35,11 @@ public class Client {
 		}
 	}
 	
-	public String openFile(String file){
+	public ClientDoc openFile(String file){
 		writer.openFile(file);
 		String contents = reader.waitForFile();
-		return contents;
+		doc = new ClientDoc(contents);
+		return doc;
 	}
 
 	public void uploadFile(){
@@ -58,7 +60,8 @@ public class Client {
 		}
 	}
 
-	public void insertCharacter(char c) {
-		doc.insertCharacter(c);
+	public void queueUpdate(int line, int pos, String insertion) {
+		Write w = new Write(new String[]{""+line, ""+pos, insertion, ""+doc.getVersion()});
+		writer.sendCommand(w);
 	}
 }

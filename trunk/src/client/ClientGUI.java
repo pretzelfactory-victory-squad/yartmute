@@ -39,6 +39,7 @@ public class ClientGUI extends JFrame implements Observer{
 		
 		createMenu();
 		createTextArea();
+		//ClientSocketReader r = client.getReader();
 		
 		dummyLoginAnListFiles();
 		
@@ -108,8 +109,9 @@ public class ClientGUI extends JFrame implements Observer{
 	private void openFile(){
 		String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
 		        "Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
-		String text = client.openFile(selection);
-		insertNewFile(text);
+		ClientDoc doc = client.openFile(selection);
+		doc.addObserver(this);
+		insertNewFile(doc.getText());
 	}
 
 	private void uploadFile(){
@@ -119,10 +121,6 @@ public class ClientGUI extends JFrame implements Observer{
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
 		}
-	}
-	
-	private void insertCharacter(char c){
-		client.insertCharacter(c);
 	}
 
 	@Override
@@ -174,6 +172,7 @@ public class ClientGUI extends JFrame implements Observer{
 				int line = lineAndPos[0];
 				int pos = lineAndPos[1];
 				String insertion = textArea.getText(event.getOffset(), event.getLength());
+				client.queueUpdate(line, pos, insertion);
 		        System.out.println("inserted '"+insertion+"' at line:"+line+", pos:"+pos);
 			} catch (BadLocationException e) {
 				e.printStackTrace();

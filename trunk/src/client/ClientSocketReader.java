@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
 
 import common.Command;
 import common.CommandFactory;
@@ -14,17 +16,15 @@ import common.toclient.SendFile;
 import common.toclient.SendFileList;
 import common.toserver.GetFileList;
 
-public class ClientSocketReader{
+public class ClientSocketReader extends Observable{
 
 	private boolean isConnected;
 	private BufferedReader reader;
-	private Client client;
 	private Thread thread;
 	private List<Command> commands = new ArrayList<Command>();
 
 	public ClientSocketReader(final Client client, Socket socket){
 		try {
-			this.client = client;
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -33,7 +33,7 @@ public class ClientSocketReader{
 			e.printStackTrace();
 			return;
 		}
-		
+
 		isConnected = true;
 		thread = new Thread(new Runnable(){
 			public void run(){
@@ -50,7 +50,7 @@ public class ClientSocketReader{
 		}, "ClientSocketReader");
 		thread.start();
 	}
-	
+
 	public void waitForUpdate() throws IOException{
 		System.out.println("waiting for server response");
 		String line = reader.readLine();
@@ -59,21 +59,23 @@ public class ClientSocketReader{
 			isConnected = false;
 			return;
 		}
-		
+
 		try {
 			System.out.println("Command received: "+line);
-			commands.add(CommandFactory.getCommand(line));
+			Command c = CommandFactory.getCommand(line);
+			commands.add(c);
+			setChanged();
+			notifyObservers();
 			synchronized(this){
 				notifyAll();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private Command waitForCommand(String type) {
-		String[] empty = {};
 		try {
 			boolean wait = true;
 			while(wait){
@@ -97,12 +99,12 @@ public class ClientSocketReader{
 			return null;
 		}
 	}
-	
+
 	public String[] waitForFileList(){
 		SendFileList cmd = (SendFileList)waitForCommand(SendFileList.TYPE);
 		return cmd.getFileList();
 	}
-	
+
 	public String waitForFile() {
 		SendFile cmd = (SendFile)waitForCommand(SendFile.TYPE);
 		return cmd.getFile();
