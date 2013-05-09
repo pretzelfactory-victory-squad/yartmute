@@ -40,7 +40,12 @@ public class ServerSocketThread implements Runnable {
 					return;
 				}
 				ServerCommand command = (ServerCommand) CommandFactory.getCommand(line);
-				command.execute(writer);
+				try{
+					command.execute(writer);
+				} catch (OutOfSyncException e){
+					
+					
+				}
 			} catch (Exception e) {
 				if(doc!=null){
 					doc.save();
