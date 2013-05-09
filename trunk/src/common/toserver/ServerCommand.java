@@ -7,6 +7,7 @@ import server.exceptions.ServerExeptions;
 import common.Command;
 
 public abstract class ServerCommand extends Command{
+	public ServerDoc result;
 	
 	public ServerCommand(String[] arg){
 		super(arg);

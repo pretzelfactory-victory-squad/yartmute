@@ -44,11 +44,13 @@ public class ServerSocketThread implements Runnable {
 				ServerCommand command = (ServerCommand) CommandFactory.getCommand(line);
 				try{
 					command.execute(writer, doc);
+					doc = command.result;
 				} catch (OutOfSyncException e){
 					
 					
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				if(doc!=null){
 					doc.save();
 				}

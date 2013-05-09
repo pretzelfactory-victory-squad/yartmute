@@ -24,19 +24,19 @@ public class Open extends ServerCommand {
 	}
 
 	@Override
-	public void execute(BufferedWriter writer, ServerDoc doc) {
-		doc = ServerDocHandler.getDoc(getArg(0));
+	public void execute(BufferedWriter writer, final ServerDoc doc) { // doc might be null, always use result
+		result = ServerDocHandler.getDoc(getArg(0));
 		String[] s = new String[3];
 		s[0] = getArg(0);
-		s[1] = String.valueOf(doc.getVerNbr());
-		s[2] = doc.getDoc();
+		s[1] = String.valueOf(result.getVerNbr());
+		s[2] = result.getDoc();
 		Command c = new SendFile(s);
 		try {
 			writer.write(c.toString());
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 	
 	

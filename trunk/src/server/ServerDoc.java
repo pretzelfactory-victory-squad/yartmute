@@ -20,6 +20,13 @@ public class ServerDoc {
 	private List<Write> writeCommands;
 	private String fileName;
 
+	public void copy(ServerDoc from){
+		version = from.version;
+		doc = from.doc;
+		writeCommands = from.writeCommands;
+		fileName = from.fileName;
+	}
+	
 	// Create a new document and read it from harddrive
 	public ServerDoc(String fileName) {
 		this.fileName = fileName;
@@ -96,8 +103,8 @@ public class ServerDoc {
 		String[] lines = text.split("\n");
 		int lineStart = Integer.valueOf(command.getArg(0));
 		int lineEnd = Integer.valueOf(command.getArg(1));
-		int slotStart = Integer.valueOf(command.getArg(3));
-		int slotEnd = Integer.valueOf(command.getArg(4));
+		int slotStart = Integer.valueOf(command.getArg(2));
+		int slotEnd = Integer.valueOf(command.getArg(3));
 
 		if(lineStart==lineEnd){
 			StringBuilder currentline = doc.get(lineStart);
