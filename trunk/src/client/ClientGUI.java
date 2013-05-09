@@ -39,7 +39,7 @@ public class ClientGUI extends JFrame implements Observer{
 		
 		createMenu();
 		createTextArea();
-		//ClientSocketReader r = client.getReader();
+		ClientSocketReader r = client.getReader();
 		
 		dummyLoginAnListFiles();
 		

@@ -61,7 +61,7 @@ public class Client {
 	}
 
 	public void queueUpdate(int line, int pos, String insertion) {
-		Write w = new Write(new String[]{""+line, ""+pos, insertion, ""+doc.getVersion()});
-		writer.sendCommand(w);
+		//Write w = new Write(line, pos, insertion, doc.getVersion());
+		//writer.sendCommand(w);
 	}
 }
