@@ -22,8 +22,20 @@ public class Write extends ServerCommand {
 		type = TYPE;
 	}
 	
-	public void modify(List<Write> list){
+	public void modify(List<Write> list){//inte färdig
 		//TODO: Implement commando adjustment. Increment version by 1.
+		String[] modifiedWrite = new String[6]; 
+		modifiedWrite[5] = list.get(list.size()-1).getArg(5);
+		int modLineStart = Integer.valueOf(modifiedWrite[0]);
+		int modLineEnd = Integer.valueOf(modifiedWrite[1]);
+		int modSlotStart = Integer.valueOf(modifiedWrite[2]);
+		int modSlotEnd = Integer.valueOf(modifiedWrite[3]);
+		for(Write w: list){
+			if(modLineStart < Integer.valueOf(w.getArg(0))){
+				int lineBreaks = w.getArg(4).split("\n").length;
+			}
+		}
+		
 	}
 	@Override
 	public void execute(BufferedWriter writer, ServerDoc doc) throws OutOfSyncException {
