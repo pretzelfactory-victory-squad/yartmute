@@ -1,8 +1,6 @@
 package common.toserver;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.channels.GatheringByteChannel;
 import java.util.List;
 
 import common.Command;
@@ -36,12 +34,7 @@ public class Write extends ServerCommand {
 		}
 		updateArg[5] = ""+ (doc.getVerNbr());
 		Command c = new Update(updateArg);
-		try {
-			writer.write(c.toString());
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		doc.sendCmdToConnectedUsers(c);
 	}
 
 }

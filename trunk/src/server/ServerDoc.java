@@ -12,7 +12,6 @@ import java.util.List;
 
 import server.exceptions.OutOfSyncException;
 import common.Command;
-import common.toclient.Update;
 import common.toserver.Write;
 
 public class ServerDoc {
@@ -21,6 +20,27 @@ public class ServerDoc {
 	private List<StringBuilder> doc;
 	private List<Write> writeCommands;
 	private String fileName;
+	private List<BufferedWriter> users;
+	
+	public void addUser(BufferedWriter writer){
+		users.add(writer);
+	}
+	public void removeUser(BufferedWriter writer){
+		users.remove(writer);
+	}
+	
+	
+	public void sendCmdToConnectedUsers(Command c){
+		for(BufferedWriter w : users){
+			try {
+				w.write(c.toString());
+				w.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
 
 	public void copy(ServerDoc from){
 		version = from.version;
@@ -31,6 +51,7 @@ public class ServerDoc {
 	
 	// Create a new document and read it from harddrive
 	public ServerDoc(String fileName) {
+		users = new ArrayList<BufferedWriter>();
 		this.fileName = fileName;
 		doc = new ArrayList<StringBuilder>();
 		writeCommands = new LinkedList<Write>();
