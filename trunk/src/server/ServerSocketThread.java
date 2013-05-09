@@ -57,6 +57,7 @@ public class ServerSocketThread implements Runnable {
 				if(doc!=null){
 					doc.save();
 				}
+				e.printStackTrace();
 				System.out.println("Client disconnected");
 				Thread.currentThread().interrupt();
 				return;

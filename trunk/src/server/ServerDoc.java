@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import server.exceptions.OutOfSyncException;
+import common.Command;
+import common.toclient.Update;
 import common.toserver.Write;
 
 public class ServerDoc {

@@ -1,7 +1,12 @@
 package common.toserver;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.channels.GatheringByteChannel;
 import java.util.List;
+
+import common.Command;
+import common.toclient.Update;
 
 import server.ServerDoc;
 import server.exceptions.OutOfSyncException;
@@ -25,7 +30,18 @@ public class Write extends ServerCommand {
 	@Override
 	public void execute(BufferedWriter writer, ServerDoc doc) throws OutOfSyncException {
 		doc.write(this);
-		
+		String[] updateArg = new String[5];
+		for(int i=0; i<4; i++){
+			updateArg[i]=arg[i];
+		}
+		updateArg[4] = ""+ (doc.getVerNbr());
+		Command c = new Update(updateArg);
+		try {
+			writer.write(c.toString());
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
