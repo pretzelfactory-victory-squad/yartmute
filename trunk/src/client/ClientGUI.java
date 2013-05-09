@@ -139,13 +139,29 @@ public class ClientGUI extends JFrame implements Observer{
 		for(Command c : reader.getCommands()){
 			if(c.getType().equals(Update.TYPE)){
 				Update u = (Update)c;
-				//u.getLineStart();
-				//TODO: continue here
+				
+				int start = convertToSlot(u.getLineStart(), u.getSlotStart());
+				int end = convertToSlot(u.getLineEnd(), u.getSlotEnd());
+				
+				textArea.replaceRange(u.getText(), start, end);
 			}
 		}
 	}
 	
-	private int[] convertToLineAndPos(String text) {
+	private int convertToSlot(int line, int slot) {
+		String text = textArea.getText();
+		int countLine = 0;
+		int result = 0;
+		while(countLine < line){
+			result = text.indexOf('\n', result)+1;
+		    countLine++;
+		}
+		result += slot;
+		System.out.println("pos: "+result);
+		return result;
+	}
+	
+	private int[] convertToLineAndSlot(String text) {
 		int length = text.length();
 		int line = 0;
 		int count = 0;
@@ -155,9 +171,9 @@ public class ClientGUI extends JFrame implements Observer{
 		        count = i+1;
 		    }
 		}
-		int pos = length - count;
-		System.out.println("line: "+line+", pos: "+pos);
-		int[] result = {line, pos};
+		int slot = length - count;
+		System.out.println("line: "+line+", slot: "+slot);
+		int[] result = {line, slot};
 		return result;
 	}
 	
@@ -182,6 +198,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private class TextAreaListener implements CaretListener, DocumentListener{
 		
 		private String previous;
+		public boolean ignoreNext = true;
 		
 		public void savePrevious(){
 			previous = textArea.getText();
@@ -189,7 +206,11 @@ public class ClientGUI extends JFrame implements Observer{
 		
 		public void caretUpdate(CaretEvent event) {
 			try {
-				convertToLineAndPos(textArea.getText(0, event.getDot()));
+				int[] a = convertToLineAndSlot(textArea.getText(0, event.getDot()));
+				int pos = convertToSlot(a[0], a[1]);
+				//update(null, null);
+				//System.out.println("from "+event.getDot()+" to "+a[0]+","+a[1]+" back to "+pos);
+				
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
@@ -198,8 +219,9 @@ public class ClientGUI extends JFrame implements Observer{
 	        //Plain text components do not fire these events
 		}
 		public void insertUpdate(DocumentEvent e) {
-			if(previous == null){
-				savePrevious();
+			if(ignoreNext){
+				System.out.println("insert ignored");
+				ignoreNext = false;
 				return;
 			}
 			savePrevious();
@@ -210,8 +232,8 @@ public class ClientGUI extends JFrame implements Observer{
 			String textBefore = previous.substring(0, offset);
 			String insertion = previous.substring(offset, offset+length);
 			
-			int[] start = convertToLineAndPos(textBefore);
-			int[] end = convertToLineAndPos(insertion);
+			int[] start = convertToLineAndSlot(textBefore);
+			int[] end = convertToLineAndSlot(insertion);
 			end[0]+=start[0];
 			if(start[0] == end[0]){
 				end[1]+=start[1];
@@ -221,14 +243,20 @@ public class ClientGUI extends JFrame implements Observer{
 	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);	
 		}
 		public void removeUpdate(DocumentEvent e) {
+			if(ignoreNext){
+				System.out.println("insert ignored");
+				ignoreNext = false;
+				return;
+			}
+			
 			int offset = e.getOffset();
 			int length = e.getLength();
 			
 			String textBefore = previous.substring(0, offset);
 			String insertion = previous.substring(offset, offset+length);
 			
-			int[] start = convertToLineAndPos(textBefore);
-			int[] end = convertToLineAndPos(insertion);
+			int[] start = convertToLineAndSlot(textBefore);
+			int[] end = convertToLineAndSlot(insertion);
 			
 			client.queueUpdate(start[0], end[0], start[1], end[1], "");
 	        System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
