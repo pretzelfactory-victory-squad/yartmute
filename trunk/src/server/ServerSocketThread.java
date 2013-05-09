@@ -9,6 +9,7 @@ import java.net.Socket;
 
 import server.exceptions.OutOfSyncException;
 import common.CommandFactory;
+import common.toserver.Open;
 import common.toserver.ServerCommand;
 
 public class ServerSocketThread implements Runnable {
@@ -44,7 +45,9 @@ public class ServerSocketThread implements Runnable {
 				ServerCommand command = (ServerCommand) CommandFactory.getCommand(line);
 				try{
 					command.execute(writer, doc);
-					doc = command.result;
+					if(command.getType().equals(Open.TYPE)){
+						doc = command.result;
+					}
 				} catch (OutOfSyncException e){
 					
 					
