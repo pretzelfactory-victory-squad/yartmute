@@ -17,8 +17,6 @@ public class CommandFactory {
 			return new GetFileList();
 		case SendFileList.TYPE:
 			return new SendFileList(removeFirst(arg));
-		case Close.TYPE:
-			return new Close(removeFirst(arg));
 		case Open.TYPE:
 			return new Open(removeFirst(arg));
 		case Read.TYPE:

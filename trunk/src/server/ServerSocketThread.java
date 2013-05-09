@@ -39,6 +39,7 @@ public class ServerSocketThread implements Runnable {
 				System.out.println("Command received: "+line);
 				if(line == null){
 					System.out.println("Client disconnected");	//TODO: close document properly
+					doc.removeUser(writer);
 					s.close();
 					return;
 				}

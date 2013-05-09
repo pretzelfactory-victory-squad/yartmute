@@ -28,7 +28,7 @@ public class ServerDoc {
 	public void removeUser(BufferedWriter writer){
 		users.remove(writer);
 	}
-	
+
 	
 	public void sendCmdToConnectedUsers(Command c){
 		for(BufferedWriter w : users){
@@ -38,7 +38,6 @@ public class ServerDoc {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
 	}
 
