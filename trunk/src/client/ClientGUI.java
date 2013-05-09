@@ -25,6 +25,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
+import common.Command;
+import common.toclient.Update;
+
 import server.Main;
 
 public class ClientGUI extends JFrame implements Observer{
@@ -32,6 +35,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private Client client;
 	private String[] files;
 	private JTextArea textArea;
+	private ClientSocketReader reader;
 
 	public ClientGUI(Client client){
 		this.client = client;
@@ -39,7 +43,8 @@ public class ClientGUI extends JFrame implements Observer{
 		
 		createMenu();
 		createTextArea();
-		ClientSocketReader r = client.getReader();
+		reader = client.getReader();
+		reader.addObserver(this);
 		
 		dummyLoginAnListFiles();
 		
@@ -125,7 +130,12 @@ public class ClientGUI extends JFrame implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		
+		for(Command c : reader.getCommands()){
+			if(c.getType().equals(Update.TYPE)){
+				Update u = (Update)c;
+				//u.getLineStart();
+			}
+		}
 	}
 	
 	private int[] convertToLineAndPos(String text) {

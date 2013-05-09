@@ -14,9 +14,7 @@ public class Write extends ServerCommand {
 		super(arg);
 		type = TYPE;
 	}
-	public Write(String s){
-		super(s);
-	}
+	
 	@Override
 	public void execute(BufferedWriter writer) {
 		// TODO Auto-generated method stub

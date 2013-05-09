@@ -109,4 +109,8 @@ public class ClientSocketReader extends Observable{
 		SendFile cmd = (SendFile)waitForCommand(SendFile.TYPE);
 		return cmd.getFile();
 	}
+
+	public List<Command> getCommands() {
+		return commands;
+	}
 }

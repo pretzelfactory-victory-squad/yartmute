@@ -64,4 +64,8 @@ public class Client {
 		//Write w = new Write(line, pos, insertion, doc.getVersion());
 		//writer.sendCommand(w);
 	}
+
+	public ClientSocketReader getReader() {
+		return reader;
+	}
 }
