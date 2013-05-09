@@ -2,6 +2,8 @@ package common.toserver;
 
 import java.io.BufferedWriter;
 
+import server.ServerDoc;
+
 
 public class Read extends ServerCommand {
 	public static final String TYPE = "READ_";
@@ -15,7 +17,7 @@ public class Read extends ServerCommand {
 	}
 
 	@Override
-	public void execute(BufferedWriter writer) {
+	public void execute(BufferedWriter writer, ServerDoc doc) {
 		// TODO Auto-generated method stub
 		
 	}

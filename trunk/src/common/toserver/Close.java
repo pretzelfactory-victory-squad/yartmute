@@ -2,6 +2,8 @@ package common.toserver;
 
 import java.io.BufferedWriter;
 
+import server.ServerDoc;
+
 
 public class Close extends ServerCommand {
 	public static final String TYPE = "CLOSE";
@@ -16,7 +18,7 @@ public class Close extends ServerCommand {
 	}
 
 	@Override
-	public void execute(BufferedWriter writer) {
+	public void execute(BufferedWriter writer, ServerDoc doc) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import server.exceptions.OutOfSyncException;
 import common.toserver.Write;
 
 public class ServerDoc {
@@ -87,7 +89,7 @@ public class ServerDoc {
 	}
 
 
-	public synchronized void write(Write command) {
+	public synchronized void write(Write command) throws OutOfSyncException {
 		command.modify(writeCommands);
 		writeCommands.add(command);
 		String text = command.getArg(5);

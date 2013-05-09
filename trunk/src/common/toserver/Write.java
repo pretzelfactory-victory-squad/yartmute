@@ -3,6 +3,9 @@ package common.toserver;
 import java.io.BufferedWriter;
 import java.util.List;
 
+import server.ServerDoc;
+import server.exceptions.OutOfSyncException;
+
 
 public class Write extends ServerCommand {
 	public static final String TYPE = "WRITE";
@@ -20,7 +23,7 @@ public class Write extends ServerCommand {
 		//TODO: Implement commando adjustment. Increment version by 1.
 	}
 	@Override
-	public void execute(BufferedWriter writer) {
+	public void execute(BufferedWriter writer, ServerDoc doc) throws OutOfSyncException {
 		// TODO Auto-generated method stub
 		
 	}

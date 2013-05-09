@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+
+import server.exceptions.OutOfSyncException;
 import common.CommandFactory;
 import common.toserver.ServerCommand;
 
@@ -41,7 +43,7 @@ public class ServerSocketThread implements Runnable {
 				}
 				ServerCommand command = (ServerCommand) CommandFactory.getCommand(line);
 				try{
-					command.execute(writer);
+					command.execute(writer, doc);
 				} catch (OutOfSyncException e){
 					
 					

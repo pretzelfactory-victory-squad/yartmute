@@ -6,6 +6,7 @@ import java.util.List;
 
 import common.toclient.SendFileList;
 
+import server.ServerDoc;
 import server.ServerDocHandler;
 
 
@@ -17,7 +18,7 @@ public class GetFileList extends ServerCommand {
 		this.type = TYPE;
 	}
 	@Override
-	public void execute(BufferedWriter writer) {
+	public void execute(BufferedWriter writer, ServerDoc doc) {
 		List<String> l = ServerDocHandler.getDocList();
 		String arg = l.get(0);
 		for(int i=1; i<l.size(); i++){

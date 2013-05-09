@@ -1,9 +1,6 @@
 package common.toserver;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import common.Command;
@@ -27,8 +24,8 @@ public class Open extends ServerCommand {
 	}
 
 	@Override
-	public void execute(BufferedWriter writer) {
-		ServerDoc doc = ServerDocHandler.getDoc(getArg(0));
+	public void execute(BufferedWriter writer, ServerDoc doc) {
+		doc = ServerDocHandler.getDoc(getArg(0));
 		String[] s = new String[3];
 		s[0] = getArg(0);
 		s[1] = String.valueOf(doc.getVerNbr());

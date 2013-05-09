@@ -1,6 +1,9 @@
 package common.toserver;
 import java.io.BufferedWriter;
 
+import server.ServerDoc;
+import server.exceptions.ServerExeptions;
+
 import common.Command;
 
 public abstract class ServerCommand extends Command{
@@ -13,5 +16,5 @@ public abstract class ServerCommand extends Command{
 		super(s);
 	}
 	
-	public abstract void execute(BufferedWriter writer);
+	public abstract void execute(BufferedWriter writer, ServerDoc doc) throws ServerExeptions;
 }
