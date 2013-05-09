@@ -21,9 +21,15 @@ import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.Position;
+import javax.swing.text.Segment;
 
 import common.Command;
 import common.toclient.Update;
@@ -43,8 +49,6 @@ public class ClientGUI extends JFrame implements Observer{
 		
 		createMenu();
 		createTextArea();
-		reader = client.getReader();
-		reader.addObserver(this);
 		
 		dummyLoginAnListFiles();
 		
@@ -107,6 +111,8 @@ public class ClientGUI extends JFrame implements Observer{
 		System.out.println("host: "+host+", port: "+port);
 		
 		if(client.connect(host, port)){
+			reader = client.getReader();
+			reader.addObserver(this);
 			files = client.getFileList();
 		}
 	}
@@ -134,6 +140,7 @@ public class ClientGUI extends JFrame implements Observer{
 			if(c.getType().equals(Update.TYPE)){
 				Update u = (Update)c;
 				//u.getLineStart();
+				//TODO: continue here
 			}
 		}
 	}
@@ -166,6 +173,12 @@ public class ClientGUI extends JFrame implements Observer{
 	
 	private class TextAreaListener implements CaretListener, DocumentListener{
 		
+		private String previous;
+		
+		public void savePrevious(){
+			previous = textArea.getText();
+		}
+		
 		public void caretUpdate(CaretEvent event) {
 			try {
 				convertToLineAndPos(textArea.getText(0, event.getDot()));
@@ -173,27 +186,73 @@ public class ClientGUI extends JFrame implements Observer{
 				e.printStackTrace();
 			}
 		}
+		public void changedUpdate(DocumentEvent e) {
+	        //Plain text components do not fire these events
+		}
+		public void insertUpdate(DocumentEvent e) {
+			savePrevious();
+			int offset = e.getOffset();
+			int length = e.getLength();
+			
+			String textBefore = previous.substring(0, offset);
+			String insertion = previous.substring(offset, offset+length);
+			
+			int[] start = convertToLineAndPos(textBefore);
+			int[] end = convertToLineAndPos(insertion);
+			
+			client.queueUpdate(start[0], end[0], start[1], end[1], insertion);
+	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);	
+		}
+		public void removeUpdate(DocumentEvent e) {
+			int offset = e.getOffset();
+			int length = e.getLength();
+			
+			String textBefore = previous.substring(0, offset);
+			String insertion = previous.substring(offset, offset+length);
+			
+			int[] start = convertToLineAndPos(textBefore);
+			int[] end = convertToLineAndPos(insertion);
+			
+			client.queueUpdate(start[0], end[0], start[1], end[1], "");
+	        System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
+			savePrevious();
+		}
 		
-		public void insertUpdate(DocumentEvent event) {
-			String textToOffset;
+		/*public void insertUpdate(DocumentEvent event) {
 			try {
-				textToOffset = textArea.getText(0, event.getOffset());
-				int[] lineAndPos = convertToLineAndPos(textToOffset);
-				int line = lineAndPos[0];
-				int pos = lineAndPos[1];
+				String textBefore = textArea.getText(0, event.getOffset());
 				String insertion = textArea.getText(event.getOffset(), event.getLength());
-				client.queueUpdate(line, pos, insertion);
-		        System.out.println("inserted '"+insertion+"' at line:"+line+", pos:"+pos);
+				int[] lineAndPosBefore = convertToLineAndPos(textBefore);
+				int[] lineAndPos = convertToLineAndPos(insertion);
+				int lineStart = lineAndPosBefore[0];
+				int slotStart = lineAndPosBefore[1];
+				int lineEnd = lineStart + lineAndPos[0];
+				int slotEnd = lineAndPos[1];
+				client.queueUpdate(lineStart, lineEnd, slotStart, slotEnd, insertion);
+		        System.out.println("inserted '"+insertion+"' at line:"+lineStart+"-"+lineEnd+", slot:"+slotStart+"-"+slotEnd);
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
 	    }
-	    public void removeUpdate(DocumentEvent e) {
+	    public void removeUpdate(DocumentEvent event) {
 	        
 	    }
-	    public void changedUpdate(DocumentEvent e) {
-
-	    }
+	    public void changedUpdate(DocumentEvent event) {
+	    	try {
+				String textBefore = textArea.getText(0, event.getOffset());
+				String insertion = textArea.getText(event.getOffset(), event.getLength());
+				int[] lineAndPosBefore = convertToLineAndPos(textBefore);
+				int[] lineAndPos = convertToLineAndPos(insertion);
+				int lineStart = lineAndPosBefore[0];
+				int slotStart = lineAndPosBefore[1];
+				int lineEnd = lineStart + lineAndPos[0];
+				int slotEnd = lineAndPos[1];
+				client.queueUpdate(lineStart, lineEnd, slotStart, slotEnd, insertion);
+		        System.out.println("changed to: '"+insertion+"' at line:"+lineStart+"-"+lineEnd+", slot:"+slotStart+"-"+slotEnd);
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+	    }*/
 	}
 	
 	public static void main(String[] args) {
