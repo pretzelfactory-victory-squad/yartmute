@@ -219,7 +219,7 @@ public class ClientGUI extends JFrame implements Observer{
 			String insertion = previous.substring(offset, offset+length);
 			
 			int[] start = convertToLineAndSlot(textBefore);
-			int[] end = convertToLineAndSlot(insertion);
+			/*int[] end = convertToLineAndSlot(insertion);
 			end[0] += start[0];
 			if(start[0] == end[0]){
 				end[1] += start[1]-1;
@@ -227,6 +227,9 @@ public class ClientGUI extends JFrame implements Observer{
 			
 			client.queueUpdate(start[0], end[0], start[1], end[1], insertion);
 	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);	
+			*/
+			client.queueUpdate(start[0], start[0], start[1], start[1], insertion);
+	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+start[0]+", slot:"+start[1]+"-"+start[1]);	
 		}
 		public void removeUpdate(DocumentEvent e) {
 			if(ignore){
@@ -242,8 +245,8 @@ public class ClientGUI extends JFrame implements Observer{
 			int[] start = convertToLineAndSlot(textBefore);
 			int[] end = convertToLineAndSlot(insertion);
 			
-			client.queueUpdate(start[0], end[0], start[1], end[1], "");
-	        System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
+			client.queueUpdate(start[0], start[0]+end[0], start[1], end[1], "");
+	        System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+(start[0]+end[0])+", slot:"+start[1]+"-"+end[1]);
 			savePrevious();
 		}
 	}

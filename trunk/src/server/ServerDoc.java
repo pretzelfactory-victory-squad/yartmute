@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import server.exceptions.OutOfSyncException;
 import common.Command;
 import common.toserver.Write;
 
 public class ServerDoc {
 
+	private static final String END_OF_FILE = "\\END\\";
 	private long version;
 	private List<StringBuilder> doc;
 	private List<Write> writeCommands;
@@ -63,11 +66,14 @@ public class ServerDoc {
 				line = br.readLine();
 				// Read document
 				while (line != null) {
-					doc.add(new StringBuilder(line + "\n"));
+					if(line.equals(END_OF_FILE)){
+						line = "";
+						break;
+					}
+					doc.add(new StringBuilder(line));
 					line = br.readLine();
 				}
-				StringBuilder b = doc.get(doc.size()-1); // Removes last line feed that's added in the loop
-				b.delete(b.length()-1, b.length());
+				//TODO: if last line is empty readLine will not read it
 				
 				System.out.println("Printing file '" + fileName + "'");
 				for (StringBuilder s : doc) {
@@ -97,8 +103,11 @@ public class ServerDoc {
 			out.write("" + version);
 			out.newLine();
 			for(StringBuilder s : doc){
+				String line = s.toString();
 				out.write(s.toString());
+				out.newLine();
 			}
+			out.write(END_OF_FILE);
 			out.flush();
 			out.close();
 		} catch (IOException e) {
@@ -108,11 +117,13 @@ public class ServerDoc {
 
 	// Writes out the whole document
 	public synchronized String getDoc() {
-		String output = "";
+		StringBuilder output = new StringBuilder();
 		for (StringBuilder s : doc) {
-			output += s.toString();
+			output.append(s);
+			output.append('\n');
 		}
-		return output;
+		output.delete(output.length()-1, output.length());
+		return output.toString();
 	}
 
 	public synchronized long getVerNbr() {
@@ -123,21 +134,57 @@ public class ServerDoc {
 	public synchronized void write(Write command) throws OutOfSyncException {
 		command.modify(writeCommands);
 		writeCommands.add(command);
-		String text = command.getArg(5);
-		String[] lines = text.split("\n");
-		int lineStart = Integer.valueOf(command.getArg(0));
-		int lineEnd = Integer.valueOf(command.getArg(1));
-		int slotStart = Integer.valueOf(command.getArg(2));
-		int slotEnd = Integer.valueOf(command.getArg(3));
+		String text = command.getText();
+		
+		String[] lines = StringUtils.splitPreserveAllTokens(text, '\n'); // because String.split ignores trailing whitespace
+		
+		int lineStart = command.getLineStart();
+		int lineEnd = command.getLineEnd();
+		int slotStart = command.getSlotStart();
+		int slotEnd = command.getSlotEnd();
+		
+		StringBuilder firstLine = doc.get(lineStart);
+		StringBuilder lastLine = doc.get(lineEnd);
 
-		if(lineStart==lineEnd){
+		if(lineStart != lineEnd || slotStart != slotEnd){
+			for(int i =lineStart+1; i <= lineEnd; i++){
+				doc.remove(i);
+			}
+
+			firstLine.replace(slotStart, firstLine.length(), lastLine.substring(slotEnd));
+		}
+		
+		if(lines.length == 0){ // no insertion, only delete
+			
+		}else if(lines.length == 1){ 	// single line insert (simplest case)
+			firstLine.insert(slotStart, lines[0]);					
+		}else{					// multi line insert
+			String end = null;
+			try{
+				end = firstLine.substring(slotStart); 
+			}catch(StringIndexOutOfBoundsException e){
+				e.printStackTrace();
+			}
+			firstLine.replace(slotStart, firstLine.length(), lines[0]);
+			for(int i = lineStart+1; i<lines.length-1; i++){
+				doc.add(i, new StringBuilder(lines[i]));
+			}
+			doc.add(new StringBuilder(lines[lines.length-1] + end));
+		}
+		
+		for(StringBuilder s : doc){
+			System.out.println(s);
+		}
+		
+		/*
+		if(lineStart==lineEnd && lines.length == 1){
 			StringBuilder currentline = doc.get(lineStart);
 			currentline.delete(slotStart, slotEnd);
 			currentline.insert(slotStart, text);
 		} else {
 			//Add first line
 			StringBuilder firstline = doc.get(lineStart);
-			firstline.delete(slotStart, doc.size());
+			firstline.delete(slotStart, firstline.length()-1);
 			firstline.insert(slotStart, text);
 			//Remove lines in the middle
 			for(int i =lineStart+1; lineStart < lineEnd; i++){
@@ -151,7 +198,7 @@ public class ServerDoc {
 			StringBuilder lastline = doc.get(lineEnd);
 			lastline.delete(0, slotEnd);
 			lastline.insert(lineEnd, text);
-		}
+		}*/
 		version++;
 	}
 	public String getFileName() {

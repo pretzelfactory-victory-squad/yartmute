@@ -22,6 +22,25 @@ public class Write extends ServerCommand {
 		type = TYPE;
 	}
 	
+	public int getLineStart(){
+		return Integer.parseInt(arg[0]);
+	}
+	public int getLineEnd(){
+		return Integer.parseInt(arg[1]);
+	}
+	public int getSlotStart(){
+		return Integer.parseInt(arg[2]);
+	}
+	public int getSlotEnd(){
+		return Integer.parseInt(arg[3]);
+	}
+	public String getText(){
+		return arg[4];
+	}
+	public long getVersion(){
+		return Long.parseLong(arg[5]);
+	}
+	
 	public void modify(List<Write> list){//inte färdig
 		//TODO: Implement commando adjustment. Increment version by 1.
 		if(list.size() == 0){

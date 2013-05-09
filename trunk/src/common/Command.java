@@ -24,7 +24,7 @@ public class Command {
 	public String getType(){
 		return type;
 	}
-	public String getArg(int i){
+	protected String getArg(int i){
 		return arg[i];
 	}
 	
