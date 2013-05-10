@@ -22,7 +22,7 @@ public class ServerDoc {
 	private long version;
 	private List<StringBuilder> doc;
 	private List<Write> writeCommands;
-	private String fileName;
+	private File file;
 	private List<BufferedWriter> users;
 	
 	public void addUser(BufferedWriter writer){
@@ -48,17 +48,18 @@ public class ServerDoc {
 		version = from.version;
 		doc = from.doc;
 		writeCommands = from.writeCommands;
-		fileName = from.fileName;
+		file = from.file;
+		users = from.users;
 	}
 	
 	// Create a new document and read it from harddrive
-	public ServerDoc(String fileName) {
+	public ServerDoc(File file) {
 		users = new ArrayList<BufferedWriter>();
-		this.fileName = fileName;
+		this.file = file;
 		doc = new ArrayList<StringBuilder>();
 		writeCommands = new LinkedList<Write>();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("./files/" + fileName));
+			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = br.readLine();
 			if(line != null){
 				// Read Version number
@@ -75,16 +76,16 @@ public class ServerDoc {
 				}
 				//TODO: if last line is empty readLine will not read it
 				
-				System.out.println("Printing file '" + fileName + "'");
+				System.out.println("Printing file '" + file.getName() + "'");
 				for (StringBuilder s : doc) {
 					System.out.println(s);
 				}
 				br.close();
 			} else {
-				BufferedWriter out = new BufferedWriter(new FileWriter("./files/" + fileName, false));
+				BufferedWriter out = new BufferedWriter(new FileWriter(file, false));
 				out.write("0");
 				out.flush();
-				System.out.println("Created new document with filename '" + fileName + "'");
+				System.out.println("Created new document with filename '" + file.getName() + "'");
 				out.close();
 			}
 		} catch (IOException e) {
@@ -94,12 +95,11 @@ public class ServerDoc {
 	}
 	// Save the document to harddrive
 	public synchronized void save(){
-		File file = new File(fileName +".txt");
 		if(file.exists()) {
 			file.delete();
 		}
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter("./files/" + fileName, false));
+			BufferedWriter out = new BufferedWriter(new FileWriter(file, false));
 			out.write("" + version);
 			out.newLine();
 			for(StringBuilder s : doc){
@@ -178,12 +178,12 @@ public class ServerDoc {
 		version++;
 	}
 	public String getFileName() {
-		return fileName;
+		return file.getName();
 	}
 	public String toString(){
 		return getFileName();
 	}
 	public boolean equals(Object obj){
-		return fileName.equals(obj.toString());
+		return toString().equals(obj.toString());
 	}
 }

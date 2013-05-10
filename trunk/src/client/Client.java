@@ -73,4 +73,9 @@ public class Client {
 	public ClientSocketReader getReader() {
 		return reader;
 	}
+	
+	public static void main(String[] args) {
+		Client client = new Client();
+		new ClientGUI(client);
+	}
 }

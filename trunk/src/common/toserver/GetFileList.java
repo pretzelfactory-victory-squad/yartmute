@@ -19,7 +19,7 @@ public class GetFileList extends ServerCommand {
 	}
 	@Override
 	public void execute(BufferedWriter writer, ServerDoc doc) {
-		List<String> l = ServerDocHandler.getDocList();
+		List<String> l = ServerDocHandler.instance.getDocList();
 		String arg = l.get(0);
 		for(int i=1; i<l.size(); i++){
 			arg += "|" + l.get(i);
