@@ -1,11 +1,13 @@
 package common;
 
+import java.io.IOException;
+
 import common.toclient.*;
 import common.toserver.*;
 
 
 public class CommandFactory {
-	public static Command getCommand(String s) throws Exception{
+	public static Command getCommand(String s) throws MalformedCommandException{
 		String[] arg = s.split(":");
 		
 		for(int i=0; i<arg.length; i++){
@@ -28,13 +30,13 @@ public class CommandFactory {
 		case SendFile.TYPE:
 			return new SendFile(removeFirst(arg));
 		default:
-			throw new Exception("Can't identify command.");
+			throw new MalformedCommandException("Can't identify command.");
 		}
 	}
-	public static Command getCommand(byte[] s) throws Exception{
+	public static Command getCommand(byte[] s) throws MalformedCommandException{
 		return getCommand(new String(s));
 	}
-	public static Command getCommand(char[] s) throws Exception{
+	public static Command getCommand(char[] s) throws MalformedCommandException{
 		return getCommand(new String(s));
 	}
 	private static String[] removeFirst(String[] arg){
@@ -45,4 +47,9 @@ public class CommandFactory {
 		return s;
 	}
 	
+	public static class MalformedCommandException extends RuntimeException{
+		public MalformedCommandException(String string) {
+			super(string);
+		}
+	}
 }

@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 import server.exceptions.OutOfSyncException;
+import server.exceptions.ServerExeptions;
 import common.CommandFactory;
+import common.CommandFactory.MalformedCommandException;
 import common.toserver.Open;
 import common.toserver.ServerCommand;
 
@@ -38,9 +41,7 @@ public class ServerSocketThread implements Runnable {
 				String line = reader.readLine();
 				System.out.println("Command received: "+line);
 				if(line == null){
-					System.out.println("Client disconnected");	//TODO: close document properly
-					doc.removeUser(writer);
-					s.close();
+					disconnect();
 					return;
 				}
 				ServerCommand command = (ServerCommand) CommandFactory.getCommand(line);
@@ -50,19 +51,37 @@ public class ServerSocketThread implements Runnable {
 						doc = command.result;
 					}
 				} catch (OutOfSyncException e){
-					
-					
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
+			} catch(ServerExeptions e){
 				e.printStackTrace();
-				if(doc!=null){
-					doc.save();
-				}
+			} catch (MalformedCommandException e) {
 				e.printStackTrace();
-				System.out.println("Client disconnected");
-				Thread.currentThread().interrupt();
+			} catch (SocketException e) {
+				disconnect();
+				return;
+			} catch (IOException e) {
+				e.printStackTrace();
+				disconnect();
 				return;
 			}
 		}
+	}
+	
+	private void disconnect() {
+		if(doc!=null){
+			doc.save();
+		}
+		System.out.println("Client disconnected");
+		doc.removeUser(writer);
+		
+		try {
+			s.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		Thread.currentThread().interrupt();
+		return;
 	}
 }
