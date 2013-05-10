@@ -175,30 +175,6 @@ public class ServerDoc {
 		for(StringBuilder s : doc){
 			System.out.println(s);
 		}
-		
-		/*
-		if(lineStart==lineEnd && lines.length == 1){
-			StringBuilder currentline = doc.get(lineStart);
-			currentline.delete(slotStart, slotEnd);
-			currentline.insert(slotStart, text);
-		} else {
-			//Add first line
-			StringBuilder firstline = doc.get(lineStart);
-			firstline.delete(slotStart, firstline.length()-1);
-			firstline.insert(slotStart, text);
-			//Remove lines in the middle
-			for(int i =lineStart+1; lineStart < lineEnd; i++){
-				doc.remove(i);
-			}
-			//Add the new lines.
-			for(int i = lineStart+1; lineStart<lines.length-1; i++){
-				doc.add(i, new StringBuilder(lines[i]));
-			}	
-			//Add the last line
-			StringBuilder lastline = doc.get(lineEnd);
-			lastline.delete(0, slotEnd);
-			lastline.insert(lineEnd, text);
-		}*/
 		version++;
 	}
 	public String getFileName() {

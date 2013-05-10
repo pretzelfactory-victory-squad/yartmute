@@ -135,7 +135,7 @@ public class ClientGUI extends JFrame implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		synchronized(listener){
+		synchronized(textArea){
 			listener.ignore = true;
 			doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
 			textArea.setText(doc.getText());					 // Updating text and caret position
