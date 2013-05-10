@@ -16,6 +16,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
@@ -43,6 +44,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private JTextArea textArea;
 	private ClientDoc doc;
 	private TextAreaListener listener;
+	private JScrollPane scrollPane;
 
 	public ClientGUI(Client client){
 		this.client = client;
@@ -59,10 +61,12 @@ public class ClientGUI extends JFrame implements Observer{
 	
 	private void createTextArea() {
 		textArea = new JTextArea();
-		add(textArea);
 		listener = new TextAreaListener();
 		textArea.addCaretListener(listener);
 		textArea.getDocument().addDocumentListener(listener);
+		
+		scrollPane = new JScrollPane(textArea);
+		add(scrollPane);
 	}
 
 	private void createMenu(){
