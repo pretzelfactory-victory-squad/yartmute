@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
 import common.toserver.GetFileList;
 import common.toserver.Open;
@@ -12,7 +13,11 @@ import common.toserver.ServerCommand;
 public class ClientSocketWriter {
 	private BufferedWriter writer;
 	public ClientSocketWriter(OutputStream os){
-		writer = new BufferedWriter(new OutputStreamWriter(os));
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void sendCommand(ServerCommand command){

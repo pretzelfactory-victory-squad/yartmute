@@ -25,7 +25,7 @@ public class ClientSocketReader extends Observable{
 
 	public ClientSocketReader(final Client client, Socket socket){
 		try {
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			return;
