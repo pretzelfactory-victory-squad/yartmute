@@ -37,7 +37,7 @@ public class ServerSocketThread implements Runnable {
 	private void waitForCommand(){
 		while(true){
 			try {
-				System.out.println("waiting for command");
+				//System.out.println("waiting for command");
 				String line = reader.readLine();
 				System.out.println("Command received: "+line);
 				if(line == null){

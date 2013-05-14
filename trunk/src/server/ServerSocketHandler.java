@@ -19,11 +19,11 @@ public class ServerSocketHandler {
 	
 	public void waitForClient(){
 		while(true){
-			System.out.println("waiting for connection");
+			//System.out.println("waiting for connection");
 			Socket socket = null;
 			try{
 				socket = serverSocket.accept();
-				System.out.println("Connected to "+socket.getInetAddress());
+				System.out.println("Client connected: "+socket.getInetAddress());
 				
 				Thread t = new Thread(new ServerSocketThread(socket), "ServerSocketThread");
 				t.start();

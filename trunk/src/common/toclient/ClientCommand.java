@@ -2,7 +2,7 @@ package common.toclient;
 
 import common.Command;
 
-public class ClientCommand extends Command {
+public abstract class ClientCommand extends Command {
 
 	public ClientCommand(String[] arg) {
 		super(arg);
@@ -11,4 +11,11 @@ public class ClientCommand extends Command {
 		super(arg);
 	}
 
+	public String getErrorMsg(){
+		return null;
+	}
+	
+	public boolean isSuccessful(){
+		return getErrorMsg().equals("");
+	}
 }

@@ -3,6 +3,7 @@ package server;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class ServerDoc {
 	 * @param file
 	 * Filename for the document.
 	 */
-	public ServerDoc(File file) {
+	public ServerDoc(File file) throws FileNotFoundException {
 		users = new ArrayList<BufferedWriter>();
 		this.file = file;
 		doc = new ArrayList<StringBuilder>();
@@ -79,7 +80,6 @@ public class ServerDoc {
 					doc.add(new StringBuilder(line));
 					line = br.readLine();
 				}
-				//TODO: if last line is empty readLine will not read it
 				
 				System.out.println("Printing file '" + file.getName() + "'");
 				for (StringBuilder s : doc) {
@@ -93,7 +93,9 @@ public class ServerDoc {
 				System.out.println("Created new document with filename '" + file.getName() + "'");
 				out.close();
 			}
-		} catch (IOException e) {
+		} catch(FileNotFoundException e){
+			throw e;
+		}catch (IOException e) {
 			e.printStackTrace();
 		}
 

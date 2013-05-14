@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.Command.CommandArgumentException;
+import common.toclient.SendFile;
 import common.toserver.Open;
 import common.toserver.Write;
 
@@ -46,11 +47,15 @@ public class Client {
 	 * The calling thread is paused until response is received
 	 * @param file name of file
 	 * */
-	public ClientDoc openFile(String file){
+	public ClientDoc openFile(String file) throws ServerException{
 		writer.openFile(file);
-		String contents = reader.waitForFile();
-		doc = new ClientDoc(reader, contents);
-		return doc;
+		SendFile cmd = (SendFile) reader.waitForCommand(SendFile.TYPE);
+		if(cmd.isSuccessful()){
+			doc = new ClientDoc(reader, cmd.getFile());
+			return doc;
+		}else{
+			throw new ServerException(cmd.getErrorMsg());
+		}
 	}
 
 	public void uploadFile(){
@@ -93,6 +98,12 @@ public class Client {
 	 * */
 	public ClientSocketReader getReader() {
 		return reader;
+	}
+	
+	public static class ServerException extends IOException{
+		public ServerException(String errorMsg) {
+			super(errorMsg);
+		}
 	}
 	
 	public static void main(String[] args) {

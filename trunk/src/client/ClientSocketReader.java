@@ -52,16 +52,14 @@ public class ClientSocketReader extends Observable{
 	}
 
 	public void waitForUpdate() throws IOException{
-		System.out.println("waiting for server response");
 		String line = reader.readLine();
-		System.out.println("line received"+line);
 		if(line == null){
 			isConnected = false;
 			return;
 		}
 
 		try {
-			System.out.println("Command received: "+line);
+			System.out.println("Cmd received: "+line);
 			Command c = CommandFactory.getCommand(line);
 			commands.add(c);
 			setChanged();
@@ -75,21 +73,19 @@ public class ClientSocketReader extends Observable{
 
 	}
 
-	private Command waitForCommand(String type) {
+	Command waitForCommand(String type) {
 		try {
 			boolean wait = true;
 			while(wait){
 				for(Command c : commands){
-					System.out.println("type:"+c.getType()+" = "+type);
 					if(c.getType().equals(type)){
 						wait = false;
 						commands.remove(c);
 						return c;
 					}
 				}
-				System.out.println("Waiting for "+type+" command");
 				synchronized(this){
-					System.out.println(Thread.currentThread().getName()+": Waiting for "+type+" response");
+					System.out.println("Waiting for:  "+type+" response (Thread:"+Thread.currentThread().getName()+")");
 					wait();
 				}
 			}

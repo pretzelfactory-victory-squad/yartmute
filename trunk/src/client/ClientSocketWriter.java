@@ -21,6 +21,7 @@ public class ClientSocketWriter {
 	}
 	
 	public void sendCommand(ServerCommand command){
+		System.out.print("Sending cmd:  "+command);
 		try {
 			writer.write(command.toString());
 			writer.flush();

@@ -1,6 +1,7 @@
 package server;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,12 +17,17 @@ public class ServerDocHandler {
 		this.folder = folder;
 		File[] listOfFiles = folder.listFiles();
 		for(File f:listOfFiles) {
-			fileList.put(f.getName(), new ServerDoc(f));
+			try{
+				fileList.put(f.getName(), new ServerDoc(f));
+			}catch(FileNotFoundException e){
+				System.err.println("Unable to open file "+f+": "+e.getMessage());
+			}
 		}
+		System.err.println();
 		instance = this;
 	}
 
-	public synchronized ServerDoc getDoc(String filename){
+	public synchronized ServerDoc getDoc(String filename) throws FileNotFoundException{
 		if(fileList.containsKey(filename)){
 			return fileList.get(filename);
 		} else {

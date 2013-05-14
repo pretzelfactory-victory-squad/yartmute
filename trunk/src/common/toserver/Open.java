@@ -1,6 +1,7 @@
 package common.toserver;
 
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import common.Command;
@@ -25,13 +26,14 @@ public class Open extends ServerCommand {
 
 	@Override
 	public void execute(BufferedWriter writer, final ServerDoc doc) { // doc might be null, always use result
-		result = ServerDocHandler.instance.getDoc(getArg(0));
-		result.addUser(writer);
-		String[] s = new String[3];
-		s[0] = getArg(0);
-		s[1] = String.valueOf(result.getVerNbr());
-		s[2] = result.getDoc();
-		Command c = new SendFile(s);
+		Command c = null;
+		try{
+			result = ServerDocHandler.instance.getDoc(getArg(0));
+			result.addUser(writer);
+			c = new SendFile(getArg(0), result.getVerNbr(), result.getDoc());
+		} catch(FileNotFoundException e){
+			c = new SendFile(getArg(0), -1, "", "File not found: "+getArg(0));
+		}
 		try {
 			writer.write(c.toString());
 			writer.flush();
@@ -39,6 +41,4 @@ public class Open extends ServerCommand {
 			e.printStackTrace();
 		}
 	}
-	
-	
 }

@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.Action;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,6 +32,8 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
+
+import client.Client.ServerException;
 
 import common.Command;
 import common.toclient.Update;
@@ -91,7 +94,7 @@ public class ClientGUI extends JFrame implements Observer{
 
 		openFileItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				openFile();
+				openFileDialog();
 			}
 		});
 
@@ -119,21 +122,31 @@ public class ClientGUI extends JFrame implements Observer{
 
 		if(client.connect(host, port)){
 			files = client.getFileList();
-			openFile();
+			openFileDialog();
 		}
 	}
 
-	private void openFile(){
-		if(files != null){
-			String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
-					"Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
-			if(selection != null){
-				doc = client.openFile(selection);
+	private boolean openFile(String filename){
+		if(filename != null){
+			try{
+				doc = client.openFile(filename);
 				doc.addObserver(this);
 				insertNewFile(doc.getText());
-			} 		
+				return true;
+			} catch(ServerException e){
+				JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		return false;
+	}
+	
+	private void openFileDialog(){
+		if(files != null){
+			String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
+			        "Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
+			openFile(selection); 		
 		} else {
-			JOptionPane.showMessageDialog(this, "Please connect to a server first.");
+			JOptionPane.showMessageDialog(this, "Please connect to a server first.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -189,9 +202,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private void dummyLoginAndOpenFirst(){
 		if(client.connect("localhost", 3790)){
 			files = client.getFileList();
-			doc = client.openFile(files[0]);
-			doc.addObserver(this);
-			insertNewFile(doc.getText());
+			openFile("huja");
 		}
 	}
 
