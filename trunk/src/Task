@@ -1,4 +1,12 @@
 TODO:
 
-Write command modify - Aron
-Fix caret position when other people modify the document. 
+Aron - Write command modify
+
+- Fix caret position when other people modify the document.
+ 
+-ERROR: component must be showing on the screen to determine its location
+Try to connect to server in GUI. (ClientGUI.java:112)
+Same error on "open file"
+
+
+
