@@ -49,24 +49,24 @@ public class ClientGUI extends JFrame implements Observer{
 	public ClientGUI(Client client, boolean dummyLogin){
 		this.client = client;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		createMenu();
 		createTextArea();
-		
+
 		if(dummyLogin){
 			dummyLoginAndOpenFirst();
 		}
-		
+
 		this.setSize(800, 600);
 		setVisible(true);
 	}
-	
+
 	private void createTextArea() {
 		textArea = new JTextArea();
 		listener = new TextAreaListener();
 		textArea.addCaretListener(listener);
 		textArea.getDocument().addDocumentListener(listener);
-		
+
 		scrollPane = new JScrollPane(textArea);
 		add(scrollPane);
 	}
@@ -79,66 +79,70 @@ public class ClientGUI extends JFrame implements Observer{
 
 		JMenuItem serverItem = new JMenuItem("Connect to server");
 		menu.add(serverItem);
-		
+
 		serverItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				connectToServer();
 			}
 		});
-		
+
 		JMenuItem openFileItem = new JMenuItem("Open file");
 		menu.add(openFileItem);
-		
+
 		openFileItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				openFile();
 			}
 		});
-		
+
 		JMenuItem uploadFileItem = new JMenuItem("Upload file");
 		menu.add(uploadFileItem);
-		
+
 		uploadFileItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				uploadFile();
 			}
 		});
-		
+
 		setJMenuBar(menuBar);
 	}
-	
+
 	private void connectToServer(){
 		JLabel label = new JLabel("Enter server address and port (format host:port)");
 		String answer = JOptionPane.showInputDialog(this, label, "Enter host address and port", JOptionPane.QUESTION_MESSAGE);
-		
+
 		String[] answerSplit = answer.split(":");
 		String host = answerSplit[0];
 		int port = Integer.parseInt(answerSplit[1]);
-		
+
 		System.out.println("host: "+host+", port: "+port);
-		
+
 		if(client.connect(host, port)){
 			files = client.getFileList();
 			openFile();
 		}
 	}
-	
+
 	private void openFile(){
-		String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
-		        "Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
-		if(selection != null){
-			doc = client.openFile(selection);
-			doc.addObserver(this);
-			insertNewFile(doc.getText());
+		if(files != null){
+			String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
+					"Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
+			if(selection != null){
+				doc = client.openFile(selection);
+				doc.addObserver(this);
+				insertNewFile(doc.getText());
+			} 		
+		} else {
+			JOptionPane.showMessageDialog(this, "Please connect to a server first.");
 		}
 	}
 
 	private void uploadFile(){
 		final JFileChooser fc = new JFileChooser();
 		int returnVal = fc.showOpenDialog(this);
-		
+
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
+			File file = fc.getSelectedFile();
 		}
 	}
 
@@ -152,23 +156,23 @@ public class ClientGUI extends JFrame implements Observer{
 			listener.ignore = false;
 		}
 	}
-	
+
 	private int[] convertToLineAndSlot(String text) {
 		int length = text.length();
 		int line = 0;
 		int count = 0;
 		for( int i=0; i<text.length(); i++ ) {
-		    if( text.charAt(i) == '\n' ) {
-		        line++;
-		        count = i+1;
-		    }
+			if( text.charAt(i) == '\n' ) {
+				line++;
+				count = i+1;
+			}
 		}
 		int slot = length - count;
 		System.out.println("line: "+line+", slot: "+slot);
 		int[] result = {line, slot};
 		return result;
 	}
-	
+
 	public void insertNewFile(String content) {
 		synchronized(listener){
 			listener.ignore = true;
@@ -176,7 +180,7 @@ public class ClientGUI extends JFrame implements Observer{
 			listener.ignore = false;
 		}
 	}
-	
+
 	private void dummyLoginAndListFiles(){
 		if(client.connect("localhost", 3790)){
 			files = client.getFileList();
@@ -190,29 +194,29 @@ public class ClientGUI extends JFrame implements Observer{
 			insertNewFile(doc.getText());
 		}
 	}
-	
+
 	private class TextAreaListener implements CaretListener, DocumentListener{
-		
+
 		private String previous;
 		public boolean ignore = false;
-		
+
 		public void savePrevious(){
 			previous = textArea.getText();
 		}
-		
+
 		public void caretUpdate(CaretEvent event) {
 			try {
 				int[] a = convertToLineAndSlot(textArea.getText(0, event.getDot()));
 				//int pos = convertToSlot(a[0], a[1]);
 				//update(null, null);
 				//System.out.println("from "+event.getDot()+" to "+a[0]+","+a[1]+" back to "+pos);
-				
+
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
 		}
 		public void changedUpdate(DocumentEvent e) {
-	        //Plain text components do not fire these events
+			//Plain text components do not fire these events
 		}
 		public void insertUpdate(DocumentEvent e) {
 			if(ignore){
@@ -221,47 +225,47 @@ public class ClientGUI extends JFrame implements Observer{
 				return;
 			}
 			savePrevious();
-			
+
 			int offset = e.getOffset();
 			int length = e.getLength();
-			
+
 			String textBefore = previous.substring(0, offset);
 			String insertion = previous.substring(offset, offset+length);
-			
+
 			int[] start = convertToLineAndSlot(textBefore);
 			/*int[] end = convertToLineAndSlot(insertion);
 			end[0] += start[0];
 			if(start[0] == end[0]){
 				end[1] += start[1]-1;
 			}
-			
+
 			client.queueUpdate(start[0], end[0], start[1], end[1], insertion);
 	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);	
-			*/
+			 */
 			client.queueUpdate(start[0], start[0], start[1], start[1], insertion);
-	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+start[0]+", slot:"+start[1]+"-"+start[1]);	
+			System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+start[0]+", slot:"+start[1]+"-"+start[1]);	
 		}
 		public void removeUpdate(DocumentEvent e) {
 			if(ignore){
 				return;
 			}
-			
+
 			int offset = e.getOffset();
 			int length = e.getLength();
-			
+
 			String textBefore = previous.substring(0, offset);
 			String insertion = previous.substring(offset, offset+length);
-			
+
 			int[] start = convertToLineAndSlot(textBefore);
 			int[] end = convertToLineAndSlot(insertion);
 			end[0] += start[0];
-			
+
 			if(start[0] == end[0]){
 				end[1] += start[1];
 			}
-			
+
 			client.queueUpdate(start[0], end[0], start[1], end[1], "");
-	        System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
+			System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
 			savePrevious();
 		}
 	}
