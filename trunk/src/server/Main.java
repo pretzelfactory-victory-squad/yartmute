@@ -1,10 +1,7 @@
 package server;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 public class Main {
 	public static final int STANDARD_PORT = 3790;

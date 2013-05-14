@@ -1,7 +1,6 @@
 package server;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

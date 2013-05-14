@@ -52,7 +52,12 @@ public class ServerDoc {
 		users = from.users;
 	}
 	
-	// Create a new document and read it from harddrive
+	/** Create a new document. Try to read the argument "file" from harddrive, 
+	 *  if it not exist a new document is created. 
+	 * 
+	 * @param file
+	 * Filename for the document.
+	 */
 	public ServerDoc(File file) {
 		users = new ArrayList<BufferedWriter>();
 		this.file = file;
@@ -104,7 +109,6 @@ public class ServerDoc {
 			out.write("" + version);
 			out.newLine();
 			for(StringBuilder s : doc){
-				String line = s.toString();
 				out.write(s.toString());
 				out.newLine();
 			}
