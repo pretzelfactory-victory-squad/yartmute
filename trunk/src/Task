@@ -13,3 +13,21 @@ Aron - Write command modify
 -ERROR: Client hang if server to connert to does not exist.
 		Gives "Operation timed out" after waiting long time.
 
+-ERROR	When client connects to another server.
+ 	Exception in thread "ServerSocketThread" Client disconnected
+		java.lang.NullPointerException
+		at server.ServerSocketThread.disconnect(ServerSocketThread.java:76)
+		at server.ServerSocketThread.waitForCommand(ServerSocketThread.java:61)
+		at server.ServerSocketThread.run(ServerSocketThread.java:34)
+		at java.lang.Thread.run(Unknown Source)
+
+
+-ERROR When listening for updates 
+		Exception in thread "ServerSocketThread" java.lang.IndexOutOfBoundsException: Index: 40, Size: 23
+		at java.util.ArrayList.rangeCheck(Unknown Source)
+		at java.util.ArrayList.get(Unknown Source)
+		at server.ServerDoc.write(ServerDoc.java:146)
+		at common.toserver.Write.execute(Write.java:71)
+		at server.ServerSocketThread.waitForCommand(ServerSocketThread.java:49)
+		at server.ServerSocketThread.run(ServerSocketThread.java:34)
+		at java.lang.Thread.run(Unknown Source)
