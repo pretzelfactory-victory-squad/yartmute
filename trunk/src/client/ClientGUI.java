@@ -119,15 +119,18 @@ public class ClientGUI extends JFrame implements Observer{
 		
 		if(client.connect(host, port)){
 			files = client.getFileList();
+			openFile();
 		}
 	}
 	
 	private void openFile(){
 		String selection = (String)JOptionPane.showInputDialog(null, "Select file:",
 		        "Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
-		doc = client.openFile(selection);
-		doc.addObserver(this);
-		insertNewFile(doc.getText());
+		if(selection != null){
+			doc = client.openFile(selection);
+			doc.addObserver(this);
+			insertNewFile(doc.getText());
+		}
 	}
 
 	private void uploadFile(){
