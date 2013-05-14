@@ -93,7 +93,8 @@ public class ServerDoc {
 		}
 
 	}
-	// Save the document to harddrive
+	/** Save the document/object to disk
+	 */
 	public synchronized void save(){
 		if(file.exists()) {
 			file.delete();
@@ -113,6 +114,7 @@ public class ServerDoc {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Document " + file.getName() +" saved to disk.");
 	}
 
 	// Writes out the whole document
