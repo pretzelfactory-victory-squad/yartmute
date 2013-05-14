@@ -20,6 +20,11 @@ public class Client {
 		
 	}
 
+	/** 
+	 * Connect to a server at {@code host}:{@code port}.
+	 * @param host host address
+	 * @param port port-number
+	 * */
 	public boolean connect(String host, int port){
 		try {
 			socket = new Socket(host, port);
@@ -36,6 +41,11 @@ public class Client {
 		}
 	}
 	
+	/** 
+	 * Open file with name {@code file} from the server. 
+	 * The calling thread is paused until response is received
+	 * @param file name of file
+	 * */
 	public ClientDoc openFile(String file){
 		writer.openFile(file);
 		String contents = reader.waitForFile();
@@ -47,6 +57,10 @@ public class Client {
 
 	}
 	
+	/** 
+	 * Fetch the list of editable files from the server. 
+	 * The calling thread is paused until response is received
+	 * */
 	public String[] getFileList(){
 		writer.getFileList();
 		String[] list = reader.waitForFileList();
@@ -61,6 +75,9 @@ public class Client {
 		}
 	}
 
+	/** 
+	 * Send a write command to the server
+	 * */
 	public void queueUpdate(int lineStart, int lineEnd, int slotStart, int slotEnd, String insertion) {
 		try{
 			Write w = new Write(lineStart, lineEnd, slotStart, slotEnd, insertion, doc.getVersion());
@@ -69,7 +86,11 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/** 
+	 * Get the reader that reads commands from the 
+	 * input stream.
+	 * */
 	public ClientSocketReader getReader() {
 		return reader;
 	}
