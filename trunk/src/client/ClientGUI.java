@@ -46,14 +46,16 @@ public class ClientGUI extends JFrame implements Observer{
 	private TextAreaListener listener;
 	private JScrollPane scrollPane;
 
-	public ClientGUI(Client client){
+	public ClientGUI(Client client, boolean dummyLogin){
 		this.client = client;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		createMenu();
 		createTextArea();
 		
-		dummyLoginAndOpenFirst();
+		if(dummyLogin){
+			dummyLoginAndOpenFirst();
+		}
 		
 		this.setSize(800, 600);
 		setVisible(true);

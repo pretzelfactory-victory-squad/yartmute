@@ -96,7 +96,11 @@ public class Client {
 	}
 	
 	public static void main(String[] args) {
+		boolean dummyLogin = false;
+		if(args.length == 1){
+			dummyLogin = Boolean.parseBoolean(args[0]);
+		}
 		Client client = new Client();
-		new ClientGUI(client);
+		new ClientGUI(client, dummyLogin);
 	}
 }
