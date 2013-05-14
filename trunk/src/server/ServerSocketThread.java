@@ -11,6 +11,7 @@ import java.net.SocketException;
 import server.exceptions.OutOfSyncException;
 import server.exceptions.ServerExeptions;
 import common.CommandFactory;
+import common.Log;
 import common.CommandFactory.MalformedCommandException;
 import common.toserver.Open;
 import common.toserver.ServerCommand;
@@ -37,9 +38,9 @@ public class ServerSocketThread implements Runnable {
 	private void waitForCommand(){
 		while(true){
 			try {
-				//System.out.println("waiting for command");
+				//Log.debug("waiting for command");
 				String line = reader.readLine();
-				System.out.println("Command received: "+line);
+				Log.debug("Command received: "+line);
 				if(line == null){
 					disconnect();
 					return;
@@ -71,9 +72,9 @@ public class ServerSocketThread implements Runnable {
 	private void disconnect() {
 		if(doc!=null){
 			doc.save();
+			doc.removeUser(writer);
 		}
-		System.out.println("Client disconnected");
-		doc.removeUser(writer);
+		Log.debug("Client disconnected");
 		
 		try {
 			s.close();

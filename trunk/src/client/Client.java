@@ -1,21 +1,25 @@
 package client;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import common.Command.CommandArgumentException;
 import common.toclient.SendFile;
 import common.toserver.Open;
 import common.toserver.Write;
 
-public class Client {
+public class Client extends Observable{
 	private Socket socket = null;
 	private ClientDoc doc = null;
 	private ClientSocketReader reader = null;
 	private ClientSocketWriter writer = null;
+	private boolean connected = false;
 
 	public Client(){
 		
@@ -26,16 +30,18 @@ public class Client {
 	 * @param host host address
 	 * @param port port-number
 	 * */
-	public boolean connect(String host, int port){
+	public boolean connect(String host, int port) throws ServerException{
 		try {
 			socket = new Socket(host, port);
 			reader = new ClientSocketReader(this, socket);
 			writer = new ClientSocketWriter(socket.getOutputStream());
+			connected = true;
 			System.out.println("Connected to "+host+":"+port);
 			return true;
+		} catch (ConnectException e) {
+			throw new ServerException(e.getMessage());
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			return false;
+			throw new ServerException(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -46,9 +52,15 @@ public class Client {
 	 * Open file with name {@code file} from the server. 
 	 * The calling thread is paused until response is received
 	 * @param file name of file
+	 * @throws ServerException
+	 * @throws SocketException 
 	 * */
 	public ClientDoc openFile(String file) throws ServerException{
-		writer.openFile(file);
+		try {
+			writer.openFile(file);
+		} catch (SocketException e) {
+			throw new ServerException(e.getMessage());
+		}
 		SendFile cmd = (SendFile) reader.waitForCommand(SendFile.TYPE);
 		if(cmd.isSuccessful()){
 			doc = new ClientDoc(reader, cmd.getFile());
@@ -65,14 +77,28 @@ public class Client {
 	/** 
 	 * Fetch the list of editable files from the server. 
 	 * The calling thread is paused until response is received
+	 * @throws SocketException 
 	 * */
-	public String[] getFileList(){
-		writer.getFileList();
+	public String[] getFileList() throws ServerException{
+		try {
+			writer.getFileList();
+		} catch (SocketException e) {
+			throw new ServerException(e.getMessage());
+		}
 		String[] list = reader.waitForFileList();
 		return list;
 	}
+	
+	public void socketReset(Exception e){
+		if(connected){
+			connected = false;
+			setChanged();
+			notifyObservers(e);
+		}
+	}
 
 	public void closeConnection() {
+		connected = false;
 		try{
 			socket.close();
 		}catch(IOException e){
@@ -83,12 +109,14 @@ public class Client {
 	/** 
 	 * Send a write command to the server
 	 * */
-	public void queueUpdate(int lineStart, int lineEnd, int slotStart, int slotEnd, String insertion) {
+	public void queueUpdate(int lineStart, int lineEnd, int slotStart, int slotEnd, String insertion) throws ServerException{
 		try{
 			Write w = new Write(lineStart, lineEnd, slotStart, slotEnd, insertion, doc.getVersion());
 			writer.sendCommand(w);
 		}catch(CommandArgumentException e){
 			e.printStackTrace();
+		} catch (SocketException e) {
+			socketReset(e);
 		}
 	}
 	
@@ -98,6 +126,14 @@ public class Client {
 	 * */
 	public ClientSocketReader getReader() {
 		return reader;
+	}
+	
+	/**
+	 * Called when observers been notified of change
+	 * @return true if connected to a server
+	 */
+	public boolean isConnected() {
+		return connected;
 	}
 	
 	public static class ServerException extends IOException{

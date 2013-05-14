@@ -3,6 +3,8 @@ package server;
 import java.io.File;
 import java.net.URI;
 
+import common.Log;
+
 public class Main {
 	public static final int STANDARD_PORT = 3790;
 
@@ -21,7 +23,7 @@ public class Main {
 				if(!folder.isDirectory()){
 					throw new Exception(folder+" is not a folder");
 				}
-				System.out.println("folder: "+folder.getAbsolutePath());
+				Log.debug("folder: "+folder.getAbsolutePath());
 			}
 			
 			if(args.length > 0){

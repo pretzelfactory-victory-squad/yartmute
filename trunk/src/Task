@@ -31,3 +31,5 @@ Aron - Write command modify
 		at server.ServerSocketThread.waitForCommand(ServerSocketThread.java:49)
 		at server.ServerSocketThread.run(ServerSocketThread.java:34)
 		at java.lang.Thread.run(Unknown Source)
+
+-ERROR Insertion when no file has been opened generates error

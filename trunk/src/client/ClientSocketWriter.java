@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 
+import common.Log;
 import common.toserver.GetFileList;
 import common.toserver.Open;
 import common.toserver.ServerCommand;
@@ -20,21 +22,23 @@ public class ClientSocketWriter {
 		}
 	}
 	
-	public void sendCommand(ServerCommand command){
-		System.out.print("Sending cmd:  "+command);
+	public void sendCommand(ServerCommand command) throws SocketException{
+		Log.debug("Sending cmd:  "+command);
 		try {
 			writer.write(command.toString());
 			writer.flush();
+		} catch (SocketException e) {
+			throw e;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void getFileList(){
+	public void getFileList() throws SocketException{
 		sendCommand(new GetFileList());
 	}
 	
-	public void openFile(String file) {
+	public void openFile(String file) throws SocketException {
 		sendCommand(new Open(file));
 	}
 }

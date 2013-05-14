@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import server.exceptions.OutOfSyncException;
 import common.Command;
+import common.Log;
 import common.toserver.Write;
 
 public class ServerDoc {
@@ -27,9 +29,11 @@ public class ServerDoc {
 	private List<BufferedWriter> users;
 	
 	public void addUser(BufferedWriter writer){
+		Log.debug("Added user");
 		users.add(writer);
 	}
 	public void removeUser(BufferedWriter writer){
+		Log.debug("Remove user");
 		users.remove(writer);
 	}
 
@@ -39,7 +43,14 @@ public class ServerDoc {
 			try {
 				w.write(c.toString());
 				w.flush();
-			} catch (IOException e) {
+			} catch(SocketException e){
+				if(e.getMessage().equals("Socket closed")){
+					Log.debug("Socket closed");
+					removeUser(w);
+				}else{
+					e.printStackTrace();
+				}
+			}catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -81,16 +92,16 @@ public class ServerDoc {
 					line = br.readLine();
 				}
 				
-				System.out.println("Printing file '" + file.getName() + "'");
+				Log.debug("Printing file '" + file.getName() + "'");
 				for (StringBuilder s : doc) {
-					System.out.println(s);
+					Log.debug(s);
 				}
 				br.close();
 			} else {
 				BufferedWriter out = new BufferedWriter(new FileWriter(file, false));
 				out.write("0");
 				out.flush();
-				System.out.println("Created new document with filename '" + file.getName() + "'");
+				Log.debug("Created new document with filename '" + file.getName() + "'");
 				out.close();
 			}
 		} catch(FileNotFoundException e){
@@ -120,7 +131,7 @@ public class ServerDoc {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Document " + file.getName() +" saved to disk.");
+		Log.debug("Document " + file.getName() +" saved to disk.");
 	}
 
 	// Writes out the whole document
@@ -181,7 +192,7 @@ public class ServerDoc {
 		}
 		
 		for(StringBuilder s : doc){
-			System.out.println(s);
+			Log.debug(s);
 		}
 		version++;
 	}

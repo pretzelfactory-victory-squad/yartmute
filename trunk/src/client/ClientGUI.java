@@ -3,13 +3,9 @@ package client;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,26 +15,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditListener;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.Position;
-import javax.swing.text.Segment;
-
 import client.Client.ServerException;
 
-import common.Command;
-import common.toclient.Update;
-
-import server.Main;
+import common.Log;
 
 public class ClientGUI extends JFrame implements Observer{
 	private JMenuBar menuBar;
@@ -55,9 +39,10 @@ public class ClientGUI extends JFrame implements Observer{
 
 		createMenu();
 		createTextArea();
+		client.addObserver(this);
 
 		if(dummyLogin){
-			dummyLoginAndOpenFirst();
+			dummyLogin();
 		}
 
 		this.setSize(800, 600);
@@ -69,6 +54,7 @@ public class ClientGUI extends JFrame implements Observer{
 		listener = new TextAreaListener();
 		textArea.addCaretListener(listener);
 		textArea.getDocument().addDocumentListener(listener);
+		textArea.setEditable(false);
 
 		scrollPane = new JScrollPane(textArea);
 		add(scrollPane);
@@ -85,7 +71,7 @@ public class ClientGUI extends JFrame implements Observer{
 
 		serverItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				connectToServer();
+				connectToServerDialog();
 			}
 		});
 
@@ -110,20 +96,38 @@ public class ClientGUI extends JFrame implements Observer{
 		setJMenuBar(menuBar);
 	}
 
-	private void connectToServer(){
+	private void connectToServerDialog(){
 		JLabel label = new JLabel("Enter server address and port (format host:port)");
 		String answer = JOptionPane.showInputDialog(this, label, "Enter host address and port", JOptionPane.QUESTION_MESSAGE);
-
-		String[] answerSplit = answer.split(":");
-		String host = answerSplit[0];
-		int port = Integer.parseInt(answerSplit[1]);
-
-		System.out.println("host: "+host+", port: "+port);
-
-		if(client.connect(host, port)){
+		if(answer != null){
+			String[] answerSplit = answer.split(":");
+			if(answerSplit.length == 2){
+				String host = answerSplit[0];
+				int port = Integer.parseInt(answerSplit[1]);
+				connectToServer(host, port);
+			}else{
+				showError("Illegal input format");
+				connectToServerDialog();
+			}
+		}
+	}
+	private boolean connectToServer(String host, int port){
+		try{
+			client.connect(host, port);
 			files = client.getFileList();
 			openFileDialog();
+			return true;
+		}catch(ServerException e){
+			showError(e);
+			return false;
 		}
+	}
+	
+	private void showError(String msg){
+		JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
+	}
+	private void showError(Exception e){
+		showError(e.getMessage());
 	}
 
 	private boolean openFile(String filename){
@@ -132,9 +136,10 @@ public class ClientGUI extends JFrame implements Observer{
 				doc = client.openFile(filename);
 				doc.addObserver(this);
 				insertNewFile(doc.getText());
+				textArea.setEditable(true);
 				return true;
 			} catch(ServerException e){
-				JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				showError(e);
 			}
 		}
 		return false;
@@ -146,7 +151,7 @@ public class ClientGUI extends JFrame implements Observer{
 			        "Open file", JOptionPane.QUESTION_MESSAGE, null, files, files[0]);
 			openFile(selection); 		
 		} else {
-			JOptionPane.showMessageDialog(this, "Please connect to a server first.", "Error", JOptionPane.ERROR_MESSAGE);
+			showError("Please connect to a server first.");
 		}
 	}
 
@@ -161,12 +166,24 @@ public class ClientGUI extends JFrame implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		synchronized(textArea){
-			listener.ignore = true;
-			doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
-			textArea.setText(doc.getText());					 // Updating text and caret position
-			textArea.setCaretPosition( doc.getCaretPosition() ); // Restoring caret position
-			listener.ignore = false;
+		if(arg0.equals(textArea)){
+			synchronized(textArea){
+				listener.ignore = true;
+				doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
+				textArea.setText(doc.getText());					 // Updating text and caret position
+				textArea.setCaretPosition( doc.getCaretPosition() ); // Restoring caret position
+				listener.ignore = false;
+			}
+		}else if(arg0.equals(client)){
+			if(arg1 instanceof Exception){
+				showError((Exception)arg1);
+				if(!client.isConnected()){
+					listener.ignore = true;
+					textArea.setText("");
+					textArea.setEditable(false);
+					listener.ignore = false;
+				}
+			}
 		}
 	}
 
@@ -181,7 +198,7 @@ public class ClientGUI extends JFrame implements Observer{
 			}
 		}
 		int slot = length - count;
-		System.out.println("line: "+line+", slot: "+slot);
+		//Log.debug("line: "+line+", slot: "+slot);
 		int[] result = {line, slot};
 		return result;
 	}
@@ -193,16 +210,14 @@ public class ClientGUI extends JFrame implements Observer{
 			listener.ignore = false;
 		}
 	}
-
-	private void dummyLoginAndListFiles(){
-		if(client.connect("localhost", 3790)){
-			files = client.getFileList();
-		}
-	}
-	private void dummyLoginAndOpenFirst(){
-		if(client.connect("localhost", 3790)){
-			files = client.getFileList();
-			openFile("huja");
+	
+	private void dummyLogin(){
+		if(connectToServer("localhost", 3790)){
+			try {
+				files = client.getFileList();
+			} catch (ServerException e) {
+				showError(e);
+			}
 		}
 	}
 
@@ -229,16 +244,16 @@ public class ClientGUI extends JFrame implements Observer{
 		public void changedUpdate(DocumentEvent e) {
 			//Plain text components do not fire these events
 		}
-		public void insertUpdate(DocumentEvent e) {
+		public void insertUpdate(DocumentEvent event) {
 			if(ignore){
-				System.out.println("insert ignored");
+				Log.debug("insert ignored");
 				savePrevious();
 				return;
 			}
 			savePrevious();
 
-			int offset = e.getOffset();
-			int length = e.getLength();
+			int offset = event.getOffset();
+			int length = event.getLength();
 
 			String textBefore = previous.substring(0, offset);
 			String insertion = previous.substring(offset, offset+length);
@@ -253,16 +268,20 @@ public class ClientGUI extends JFrame implements Observer{
 			client.queueUpdate(start[0], end[0], start[1], end[1], insertion);
 	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);	
 			 */
-			client.queueUpdate(start[0], start[0], start[1], start[1], insertion);
-			System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+start[0]+", slot:"+start[1]+"-"+start[1]);	
+			try {
+				client.queueUpdate(start[0], start[0], start[1], start[1], insertion);
+			} catch (ServerException e) {
+				showError(e);
+			}
+			Log.debug("inserted '"+insertion+"' at line:"+start[0]+"-"+start[0]+", slot:"+start[1]+"-"+start[1]);	
 		}
-		public void removeUpdate(DocumentEvent e) {
+		public void removeUpdate(DocumentEvent event) {
 			if(ignore){
 				return;
 			}
 
-			int offset = e.getOffset();
-			int length = e.getLength();
+			int offset = event.getOffset();
+			int length = event.getLength();
 
 			String textBefore = previous.substring(0, offset);
 			String insertion = previous.substring(offset, offset+length);
@@ -275,8 +294,13 @@ public class ClientGUI extends JFrame implements Observer{
 				end[1] += start[1];
 			}
 
-			client.queueUpdate(start[0], end[0], start[1], end[1], "");
-			System.out.println("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
+			try {
+				client.queueUpdate(start[0], end[0], start[1], end[1], "");
+			} catch (ServerException e) {
+				showError(e);
+			}
+			
+			Log.debug("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
 			savePrevious();
 		}
 	}

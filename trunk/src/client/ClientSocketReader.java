@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Observable;
 
 import common.Command;
 import common.CommandFactory;
+import common.Log;
 import common.toclient.SendFile;
 import common.toclient.SendFileList;
 import common.toserver.GetFileList;
@@ -41,6 +43,12 @@ public class ClientSocketReader extends Observable{
 					while(isConnected){
 						waitForUpdate();
 					}
+				} catch (SocketException e) {
+					if(e.getMessage().equals("Connection reset")){
+						client.socketReset(e);
+					}else{
+						e.printStackTrace();
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {
@@ -57,20 +65,14 @@ public class ClientSocketReader extends Observable{
 			isConnected = false;
 			return;
 		}
-
-		try {
-			System.out.println("Cmd received: "+line);
-			Command c = CommandFactory.getCommand(line);
-			commands.add(c);
-			setChanged();
-			notifyObservers();
-			synchronized(this){
-				notifyAll();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		Log.debug("Cmd received: "+line);
+		Command c = CommandFactory.getCommand(line);
+		commands.add(c);
+		setChanged();
+		notifyObservers();
+		synchronized(this){
+			notifyAll();
 		}
-
 	}
 
 	Command waitForCommand(String type) {
@@ -85,7 +87,7 @@ public class ClientSocketReader extends Observable{
 					}
 				}
 				synchronized(this){
-					System.out.println("Waiting for:  "+type+" response (Thread:"+Thread.currentThread().getName()+")");
+					Log.debug("Waiting for:  "+type+" response (Thread:"+Thread.currentThread().getName()+")");
 					wait();
 				}
 			}

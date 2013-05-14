@@ -8,6 +8,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import common.Command;
+import common.Log;
 import common.toclient.Update;
 
 public class ClientDoc extends Observable implements Observer{
@@ -54,7 +55,7 @@ public class ClientDoc extends Observable implements Observer{
 		    countLine++;
 		}
 		result += slot;
-		System.out.println("pos: "+result);
+		//Log.debug("pos: "+result);
 		return result;
 	}
 	public void setCaretPosition(int position) {
