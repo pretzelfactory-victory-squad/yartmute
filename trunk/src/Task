@@ -8,5 +8,5 @@ Aron - Write command modify
 Try to connect to server in GUI. (ClientGUI.java:112)
 Same error on "open file"
 
-
+-ERROR: Server doesnt save file on client disconnect.
 
