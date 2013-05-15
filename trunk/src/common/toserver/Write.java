@@ -76,7 +76,7 @@ public class Write extends ServerCommand {
 		int modSlotEnd = this.getSlotEnd();
 		
 		int toIndex = list.size()-1;
-		int fromIndex = (int)(toIndex- (serverVersion-versionBeforeMod));
+		int fromIndex = (int)(toIndex- (serverVersion-versionBeforeMod-1));
 		
 		
 		
