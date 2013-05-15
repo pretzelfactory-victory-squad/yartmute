@@ -82,10 +82,10 @@ public class Write extends ServerCommand {
 		
 		for(Write w: list.subList(fromIndex, toIndex)){
 			String s = w.getArg(4);
-			int wLineStart = Integer.valueOf(w.getArg(0));
-			int wLineEnd = Integer.valueOf(w.getArg(1));
-			int wSlotStart = Integer.valueOf(w.getArg(2));
-			int wSlotEnd = Integer.valueOf(w.getArg(3));
+			int wLineStart = w.getLineStart();
+			int wLineEnd = w.getLineEnd();
+			int wSlotStart = w.getSlotStart();
+			int wSlotEnd = w.getSlotEnd();
 			int lineDiff = wLineStart-wLineEnd;
 			
 			if(wLineStart <= modLineStart){
