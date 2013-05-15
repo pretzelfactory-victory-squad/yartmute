@@ -166,7 +166,8 @@ public class ClientGUI extends JFrame implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if(arg0.equals(textArea)){
+		Log.debug(arg0.getClass());
+		if(arg0.equals(doc)){
 			synchronized(textArea){
 				listener.ignore = true;
 				doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
