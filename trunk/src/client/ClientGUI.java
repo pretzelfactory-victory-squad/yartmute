@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -33,6 +34,43 @@ public class ClientGUI extends JFrame implements Observer{
 	private TextAreaListener listener;
 	private JScrollPane scrollPane;
 
+	private static final String START_TEXT = ""+
+" __   __ _______  ______ _______ _______ _     _ _______ _______\n"+
+"   \\_/   |_____| |_____/    |    |  |  | |     |    |    |______\n"+
+"    |    |     | |    \\_    |    |  |  | |_____|    |    |______\n"+
+"\n"+
+"                            ,\n"+
+"                           //\\\n"+
+"                          / | ;\n"+
+"                          | /_|\n"+
+"                        .-\"`  `\"-.\n"+
+"                      /`          `\\\n"+
+"                     /              \\\n"+
+"               .-.,_|      .-\"\"\"\"-. |\n"+
+"              |     `\",_,-'  (((-. '(\n"+
+"               \\ (`\"=._.'/   (  (o>'-`\"#\n"+
+"    ,           '.`\"-'` /     `--`  '==;\n"+
+"   /\\            `'--'`\\         _.'~~\n"+
+"  / | \\                  `.,___,-}\n"+
+"  | |  |                   )  {  }\n"+
+"   \\ \\ (.--==---==-------=' o {  }\n"+
+"    \",/` (_) (_)  (_)    (_)   \\ /\n"+
+"     / ()   o   ()    ()        ^|\n"+
+"     \\   ()  (    () o        ;  /\n"+
+"      `\\      \\         ;    / } |\n"+
+"        )      \\       /   /`  } /\n"+
+"     ,-'       |=,_   |   /,_ ,'/\n"+
+"     |    _,.-`/   `\"=\\   \\\\   \\\n"+
+"     | .\"` \\  |        \\   \\`\\  \\\n"+
+"     | |    \\ \\         `\\  \\ `\\ \\\n"+
+"     | |     \\ \\          `\\ \\  \\ \\\n"+
+"     | |      \\ \\           \\ \\  \\ \\\n"+
+"     | |       \\ \\           \\ \\  \\ \\\n"+
+"     | |        \\ \\           \\ \\  \\ \\\n"+
+"     | |         ) \\           \\ \\  ) \\\n"+
+" jgs `) \\        ^ww            ) \\ ^ww\n"+
+"      ^ww                       ^ww";
+	
 	public ClientGUI(Client client, boolean dummyLogin){
 		this.client = client;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,6 +89,8 @@ public class ClientGUI extends JFrame implements Observer{
 
 	private void createTextArea() {
 		textArea = new JTextArea();
+		textArea.setFont(new Font("Courier New", Font.PLAIN, 14));
+		textArea.setText(START_TEXT);
 		listener = new TextAreaListener();
 		textArea.addCaretListener(listener);
 		textArea.getDocument().addDocumentListener(listener);
@@ -235,7 +275,9 @@ public class ClientGUI extends JFrame implements Observer{
 		}
 
 		public void caretUpdate(CaretEvent event) {
-			doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
+			if(textArea.isEditable()){
+				doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
+			}
 		}
 		public void changedUpdate(DocumentEvent e) {
 			//Plain text components do not fire these events
