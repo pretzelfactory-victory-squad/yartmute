@@ -18,10 +18,11 @@ public class ClientDoc extends Observable implements Observer{
 	private int caretPosition;
 	private Client client;
 	
-	public ClientDoc(Client c, String text){
+	public ClientDoc(Client c, String text, Long version){
 		client = c;
 		reader = c.getReader();
 		reader.addObserver(this);
+		this.version = version;
 		this.text = new StringBuilder(text);
 	}
 	public String getText() {
@@ -34,6 +35,7 @@ public class ClientDoc extends Observable implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		Update c = (Update)reader.getCommand(Update.TYPE);
 		if(c != null){
+			version = c.getVersion();
 			int start = convertToSlot(c.getLineStart(), c.getSlotStart());
 			int end = convertToSlot(c.getLineEnd(), c.getSlotEnd());
 			String s = text.toString();

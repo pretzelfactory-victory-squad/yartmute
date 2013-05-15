@@ -65,7 +65,7 @@ public class Client extends Observable{
 		SendFile cmd = (SendFile) reader.waitForCommand(SendFile.TYPE);
 		if(cmd.isSuccessful()){
 			userId = cmd.getUserId();
-			doc = new ClientDoc(this, cmd.getFile());
+			doc = new ClientDoc(this, cmd.getFile(), cmd.getVersion());
 			return doc;
 		}else{
 			throw new ServerException(cmd.getErrorMsg());

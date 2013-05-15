@@ -45,12 +45,8 @@ public class ServerDoc {
 				w.write(c.toString());
 				w.flush();
 			} catch(SocketException e){
-				if(e.getMessage().equals("Socket closed")){
-					Log.debug("Socket closed");
-					removeUser(w);
-				}else{
-					e.printStackTrace();
-				}
+				Log.debug("Socket closed");
+				removeUser(w);
 			}catch (IOException e) {
 				e.printStackTrace();
 			}
