@@ -38,8 +38,8 @@ public class ClientDoc extends Observable implements Observer{
 			int end = convertToSlot(c.getLineEnd(), c.getSlotEnd());
 			String s = text.toString();
 			text.replace(start, end, c.getText());
-			if(c.getUserId() == client.getUserId() && start <= end){
-				caretPosition += c.getText().length();
+			if(client.getUserId() != c.getUserId() && end < caretPosition){
+				caretPosition += c.getText().length()-(end-start);
 			}
 			setChanged();
 			notifyObservers();

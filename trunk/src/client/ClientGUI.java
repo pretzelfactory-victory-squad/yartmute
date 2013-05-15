@@ -170,9 +170,12 @@ public class ClientGUI extends JFrame implements Observer{
 		if(arg0.equals(doc)){
 			synchronized(textArea){
 				listener.ignore = true;
-				doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
 				textArea.setText(doc.getText());					 // Updating text and caret position
-				textArea.setCaretPosition( doc.getCaretPosition() ); // Restoring caret position
+				try{
+					textArea.setCaretPosition( doc.getCaretPosition() ); // Restoring caret position
+				}catch(IllegalArgumentException e){
+					
+				}
 				listener.ignore = false;
 			}
 		}else if(arg0.equals(client)){
@@ -232,15 +235,7 @@ public class ClientGUI extends JFrame implements Observer{
 		}
 
 		public void caretUpdate(CaretEvent event) {
-			try {
-				int[] a = convertToLineAndSlot(textArea.getText(0, event.getDot()));
-				//int pos = convertToSlot(a[0], a[1]);
-				//update(null, null);
-				//System.out.println("from "+event.getDot()+" to "+a[0]+","+a[1]+" back to "+pos);
-
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
+			doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
 		}
 		public void changedUpdate(DocumentEvent e) {
 			//Plain text components do not fire these events
