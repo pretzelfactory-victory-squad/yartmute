@@ -14,8 +14,8 @@ import server.exceptions.OutOfSyncException;
 public class Write extends ServerCommand {
 	public static final String TYPE = "WRITE";
 
-	public Write(int lineStart, int lineEnd, int slotStart, int slotEnd, String text, long version) throws CommandArgumentException{
-		this(new String[]{""+lineStart, ""+lineEnd, ""+slotStart, ""+slotEnd, text, ""+version});
+	public Write(int lineStart, int lineEnd, int slotStart, int slotEnd, String text, int userId, long version) throws CommandArgumentException{
+		this(new String[]{""+lineStart, ""+lineEnd, ""+slotStart, ""+slotEnd, text, ""+userId, ""+version});
 		if(lineEnd < lineStart){
 			throw new CommandArgumentException("lineStart can't be bigger than lineEnd ("+lineStart+" > "+lineEnd+")");
 		}else if(lineStart == lineEnd && slotEnd < slotStart){
@@ -43,8 +43,11 @@ public class Write extends ServerCommand {
 	public String getText(){
 		return arg[4];
 	}
+	public int getUserId(){
+		return Integer.parseInt(arg[5]);
+	}
 	public long getVersion(){
-		return Long.parseLong(arg[5]);
+		return Long.parseLong(arg[6]);
 	}
 	
 	public void modify(List<Write> list){//inte färdig
@@ -69,11 +72,11 @@ public class Write extends ServerCommand {
 	@Override
 	public void execute(BufferedWriter writer, ServerDoc doc) throws OutOfSyncException {
 		doc.write(this);
-		String[] updateArg = new String[6];
-		for(int i=0; i<5; i++){
+		String[] updateArg = new String[7];
+		for(int i=0; i<6; i++){
 			updateArg[i]=arg[i];
 		}
-		updateArg[5] = ""+ (doc.getVerNbr());
+		updateArg[6] = ""+ (doc.getVerNbr());
 		Command c = new Update(updateArg);
 		doc.sendCmdToConnectedUsers(c);
 	}

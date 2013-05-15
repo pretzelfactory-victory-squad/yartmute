@@ -16,14 +16,13 @@ public class ClientDoc extends Observable implements Observer{
 	private long version;
 	private ClientSocketReader reader;
 	private int caretPosition;
+	private Client client;
 	
-	public ClientDoc(ClientSocketReader r, String text){
-		reader = r;
+	public ClientDoc(Client c, String text){
+		client = c;
+		reader = c.getReader();
 		reader.addObserver(this);
 		this.text = new StringBuilder(text);
-	}
-	public void insertCharacter(char c){
-		
 	}
 	public String getText() {
 		return text.toString();
@@ -39,7 +38,7 @@ public class ClientDoc extends Observable implements Observer{
 			int end = convertToSlot(c.getLineEnd(), c.getSlotEnd());
 			String s = text.toString();
 			text.replace(start, end, c.getText());
-			if(start <= end){
+			if(c.getUserId() == client.getUserId() && start <= end){
 				caretPosition += c.getText().length();
 			}
 			setChanged();

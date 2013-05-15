@@ -29,10 +29,10 @@ public class Open extends ServerCommand {
 		Command c = null;
 		try{
 			result = ServerDocHandler.instance.getDoc(getArg(0));
-			result.addUser(writer);
-			c = new SendFile(getArg(0), result.getVerNbr(), result.getDoc());
+			int userId = result.addUser(writer);
+			c = new SendFile(getArg(0), userId, result.getVerNbr(), result.getDoc());
 		} catch(FileNotFoundException e){
-			c = new SendFile(getArg(0), -1, "", "File not found: "+getArg(0));
+			c = new SendFile(getArg(0), -1, -1, "", "File not found: "+getArg(0));
 		}
 		try {
 			writer.write(c.toString());

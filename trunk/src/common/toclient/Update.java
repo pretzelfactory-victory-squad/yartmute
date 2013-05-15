@@ -4,8 +4,8 @@ package common.toclient;
 public class Update extends ClientCommand {
 	public static final String TYPE = "UPDAT";
 
-	public Update(int lineStart, int lineEnd, int slotStart, int slotEnd, String text, long version){
-		this(new String[]{""+lineStart, ""+lineEnd, ""+slotStart, ""+slotEnd, text, ""+version});
+	public Update(int lineStart, int lineEnd, int slotStart, int slotEnd, String text, int userId, long version){
+		this(new String[]{""+lineStart, ""+lineEnd, ""+slotStart, ""+slotEnd, text, ""+userId, ""+version});
 	}
 	
 	public Update(String[] arg) {
@@ -33,7 +33,11 @@ public class Update extends ClientCommand {
 		return getArg(4);
 	}
 	
+	public int getUserId(){
+		return Integer.valueOf(getArg(5));
+	}
+	
 	public long getVersion(){
-		return Long.valueOf(getArg(0));
+		return Long.valueOf(getArg(6));
 	}
 }

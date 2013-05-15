@@ -20,7 +20,8 @@ public class Client extends Observable{
 	private ClientSocketReader reader = null;
 	private ClientSocketWriter writer = null;
 	private boolean connected = false;
-
+	private int userId;
+	
 	public Client(){
 		
 	}
@@ -63,7 +64,8 @@ public class Client extends Observable{
 		}
 		SendFile cmd = (SendFile) reader.waitForCommand(SendFile.TYPE);
 		if(cmd.isSuccessful()){
-			doc = new ClientDoc(reader, cmd.getFile());
+			userId = cmd.getUserId();
+			doc = new ClientDoc(this, cmd.getFile());
 			return doc;
 		}else{
 			throw new ServerException(cmd.getErrorMsg());
@@ -111,7 +113,7 @@ public class Client extends Observable{
 	 * */
 	public void queueUpdate(int lineStart, int lineEnd, int slotStart, int slotEnd, String insertion) throws ServerException{
 		try{
-			Write w = new Write(lineStart, lineEnd, slotStart, slotEnd, insertion, doc.getVersion());
+			Write w = new Write(lineStart, lineEnd, slotStart, slotEnd, insertion, userId, doc.getVersion());
 			writer.sendCommand(w);
 		}catch(CommandArgumentException e){
 			e.printStackTrace();
@@ -126,6 +128,14 @@ public class Client extends Observable{
 	 * */
 	public ClientSocketReader getReader() {
 		return reader;
+	}
+	
+	/** 
+	 * Get the user id
+	 * @return user id (integer)
+	 * */
+	public int getUserId() {
+		return userId;
 	}
 	
 	/**

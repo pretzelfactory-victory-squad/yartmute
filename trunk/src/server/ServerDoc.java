@@ -26,11 +26,12 @@ public class ServerDoc {
 	private List<StringBuilder> doc;
 	private List<Write> writeCommands;
 	private File file;
-	private List<BufferedWriter> users;
+	private UserList users;
 	
-	public void addUser(BufferedWriter writer){
-		Log.debug("Added user");
-		users.add(writer);
+	public int addUser(BufferedWriter writer){
+		int id = users.add(writer);
+		Log.debug("Added user with id:"+id);
+		return id;
 	}
 	public void removeUser(BufferedWriter writer){
 		Log.debug("Remove user");
@@ -71,7 +72,7 @@ public class ServerDoc {
 	 * Filename for the document.
 	 */
 	public ServerDoc(File file) throws FileNotFoundException {
-		users = new ArrayList<BufferedWriter>();
+		users = new UserList();
 		this.file = file;
 		doc = new ArrayList<StringBuilder>();
 		writeCommands = new LinkedList<Write>();
