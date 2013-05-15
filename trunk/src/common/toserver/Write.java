@@ -56,18 +56,19 @@ public class Write extends ServerCommand {
 	}
 	
 	public void modify(List<Write> list){//inte färdig
+		long versionBeforeMod = getVersion();
+		setVersion(versionBeforeMod+1);
+		
 		if(list.size() == 0){
 			return;
 		}
 		
 		long serverVersion = list.get(list.size()-1).getVersion();
-		long versionBeforeMod = getVersion();
+		setVersion(serverVersion+1);
 		
 		if(versionBeforeMod == serverVersion){
-			setVersion(serverVersion+1);
 			return;
 		}
-		setVersion(serverVersion+1);
 		
 		int modLineStart = this.getLineStart();
 		int modLineEnd = this.getLineEnd();
