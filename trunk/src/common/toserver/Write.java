@@ -51,19 +51,35 @@ public class Write extends ServerCommand {
 	public long getVersion(){
 		return Long.parseLong(arg[6]);
 	}
+	private void setVersion(long l) {
+		arg[6] = ""+l;
+	}
 	
 	public void modify(List<Write> list){//inte färdig
-		//TODO: Implement commando adjustment. Increment version by 1.
 		if(list.size() == 0){
 			return;
 		}
-		arg[6]= list.get(list.size()-1).getArg(5);
+		
+		long serverVersion = list.get(list.size()-1).getVersion();
+		long versionBeforeMod = getVersion();
+		
+		if(versionBeforeMod == serverVersion){
+			setVersion(serverVersion+1);
+			return;
+		}
+		setVersion(serverVersion+1);
+		
 		int modLineStart = this.getLineStart();
 		int modLineEnd = this.getLineEnd();
 		int modSlotStart = this.getSlotStart();
 		int modSlotEnd = this.getSlotEnd();
 		
-		for(Write w: list){
+		int toIndex = list.size()-1;
+		int fromIndex = (int)(toIndex- (serverVersion-versionBeforeMod));
+		
+		
+		
+		for(Write w: list.subList(fromIndex, toIndex)){
 			String s = w.getArg(4);
 			int wLineStart = Integer.valueOf(w.getArg(0));
 			int wLineEnd = Integer.valueOf(w.getArg(1));
@@ -101,6 +117,7 @@ public class Write extends ServerCommand {
 		arg[2] = ""+modSlotStart;
 		arg[3] = ""+modSlotEnd;
 	}
+
 	@Override
 	public void execute(BufferedWriter writer, ServerDoc doc) throws OutOfSyncException {
 		doc.write(this);
