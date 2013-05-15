@@ -3,6 +3,8 @@ package common.toserver;
 import java.io.BufferedWriter;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import common.Command;
 import common.Command.CommandArgumentException;
 import common.toclient.Update;
@@ -55,19 +57,49 @@ public class Write extends ServerCommand {
 		if(list.size() == 0){
 			return;
 		}
-		/*
-		String[] modifiedWrite = new String[6]; 
-		modifiedWrite[5] = list.get(list.size()-1).getArg(5);
-		int modLineStart = Integer.valueOf(modifiedWrite[0]);
-		int modLineEnd = Integer.valueOf(modifiedWrite[1]);
-		int modSlotStart = Integer.valueOf(modifiedWrite[2]);
-		int modSlotEnd = Integer.valueOf(modifiedWrite[3]);
-		for(Write w: list){
-			if(modLineStart < Integer.valueOf(w.getArg(0))){
-				int lineBreaks = w.getArg(4).split("\n").length;
-			}
-		}*/
+		arg[6]= list.get(list.size()-1).getArg(5);
+		int modLineStart = this.getLineStart();
+		int modLineEnd = this.getLineEnd();
+		int modSlotStart = this.getSlotStart();
+		int modSlotEnd = this.getSlotEnd();
 		
+		for(Write w: list){
+			String s = w.getArg(4);
+			int wLineStart = Integer.valueOf(w.getArg(0));
+			int wLineEnd = Integer.valueOf(w.getArg(1));
+			int wSlotStart = Integer.valueOf(w.getArg(2));
+			int wSlotEnd = Integer.valueOf(w.getArg(3));
+			int lineDiff = wLineStart-wLineEnd;
+			
+			if(wLineStart <= modLineStart){
+				int lines = StringUtils.splitPreserveAllTokens(s, "\n").length; 
+				if(lines != 0 && lineDiff == 0){ 	
+						modLineStart = modLineStart + lines;
+						modLineEnd = modLineEnd + lines;
+				}else{
+						modLineStart = modLineStart + lineDiff;
+						modLineEnd = modLineEnd +lineDiff;
+					}
+				if(wLineEnd == modLineEnd && wLineStart != modLineStart){
+					modSlotStart = modSlotStart + wSlotEnd;
+					modSlotEnd = modSlotEnd + wSlotEnd;
+				}
+			}else if(wLineStart == modLineStart && modSlotStart > wSlotStart && lineDiff == 0){
+				int sLength = s.length();
+				int slotDiff = wSlotStart - wSlotEnd;
+				if(slotDiff != 0){
+					modSlotStart = modSlotStart + slotDiff;
+					modSlotEnd = modSlotEnd + slotDiff;
+				}else{
+					modSlotStart = modSlotStart + sLength;
+					modSlotEnd = modSlotEnd + sLength;
+				}
+			}
+		}
+		arg[0] = ""+modLineStart;
+		arg[1] = ""+modLineEnd;
+		arg[2] = ""+modSlotStart;
+		arg[3] = ""+modSlotEnd;
 	}
 	@Override
 	public void execute(BufferedWriter writer, ServerDoc doc) throws OutOfSyncException {
