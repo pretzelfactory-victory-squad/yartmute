@@ -28,7 +28,7 @@ public class ServerSocketThread implements Runnable {
 			reader = new BufferedReader(new InputStreamReader(s.getInputStream(), "UTF-8"));
 			writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 	public void run() {
@@ -52,17 +52,17 @@ public class ServerSocketThread implements Runnable {
 						doc = command.result;
 					}
 				} catch (OutOfSyncException e){
-					e.printStackTrace();
+					Log.error(e);
 				}
 			} catch(ServerExeptions e){
-				e.printStackTrace();
+				Log.error(e);
 			} catch (MalformedCommandException e) {
-				e.printStackTrace();
+				Log.error(e);
 			} catch (SocketException e) {
 				disconnect();
 				return;
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.error(e);
 				disconnect();
 				return;
 			}
@@ -78,8 +78,8 @@ public class ServerSocketThread implements Runnable {
 		
 		try {
 			s.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		} catch (IOException e) {
+			Log.error(e);
 		}
 		
 		Thread.currentThread().interrupt();

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Observable;
 
 import common.Command.CommandArgumentException;
+import common.Log;
 import common.toclient.SendFile;
 import common.toserver.Open;
 import common.toserver.Write;
@@ -37,14 +38,14 @@ public class Client extends Observable{
 			reader = new ClientSocketReader(this, socket);
 			writer = new ClientSocketWriter(socket.getOutputStream());
 			connected = true;
-			System.out.println("Connected to "+host+":"+port);
+			Log.message("Connected to "+host+":"+port);
 			return true;
 		} catch (ConnectException e) {
 			throw new ServerException(e.getMessage());
 		} catch (UnknownHostException e) {
 			throw new ServerException(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 			return false;
 		}
 	}
@@ -104,7 +105,7 @@ public class Client extends Observable{
 		try{
 			socket.close();
 		}catch(IOException e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 
@@ -116,7 +117,7 @@ public class Client extends Observable{
 			Write w = new Write(lineStart, lineEnd, slotStart, slotEnd, insertion, userId, doc.getVersion());
 			writer.sendCommand(w);
 		}catch(CommandArgumentException e){
-			e.printStackTrace();
+			Log.error(e);
 		} catch (SocketException e) {
 			socketReset(e);
 		}

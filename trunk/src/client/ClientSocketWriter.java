@@ -18,7 +18,7 @@ public class ClientSocketWriter {
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 	
@@ -30,7 +30,7 @@ public class ClientSocketWriter {
 		} catch (SocketException e) {
 			throw e;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 	

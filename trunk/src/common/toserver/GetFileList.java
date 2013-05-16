@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 
+import common.Log;
 import common.toclient.SendFileList;
 
 import server.ServerDoc;
@@ -28,12 +29,12 @@ public class GetFileList extends ServerCommand {
 		try {
 			writer.write(c.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 		try {
 			writer.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 }

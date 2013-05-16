@@ -29,10 +29,10 @@ public class ClientSocketReader extends Observable{
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			Log.error(e);
 			return;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 			return;
 		}
 
@@ -47,10 +47,10 @@ public class ClientSocketReader extends Observable{
 					if(e.getMessage().equals("Connection reset")){
 						client.socketReset(e);
 					}else{
-						e.printStackTrace();
+						Log.error(e);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					Log.error(e);
 				} finally {
 					client.closeConnection();
 				}
@@ -93,7 +93,7 @@ public class ClientSocketReader extends Observable{
 			}
 			return null;
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Log.error(e);
 			return null;
 		}
 	}

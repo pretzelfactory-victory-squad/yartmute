@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import common.Command;
+import common.Log;
 import common.toclient.SendFile;
 
 import server.ServerDoc;
@@ -38,7 +39,7 @@ public class Open extends ServerCommand {
 			writer.write(c.toString());
 			writer.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 }

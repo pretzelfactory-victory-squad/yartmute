@@ -297,15 +297,6 @@ public class ClientGUI extends JFrame implements Observer{
 			String insertion = previous.substring(offset, offset+length);
 
 			int[] start = convertToLineAndSlot(textBefore);
-			/*int[] end = convertToLineAndSlot(insertion);
-			end[0] += start[0];
-			if(start[0] == end[0]){
-				end[1] += start[1]-1;
-			}
-
-			client.queueUpdate(start[0], end[0], start[1], end[1], insertion);
-	        System.out.println("inserted '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);	
-			 */
 			try {
 				client.queueUpdate(start[0], start[0], start[1], start[1], insertion);
 			} catch (ServerException e) {

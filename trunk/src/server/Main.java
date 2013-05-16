@@ -32,8 +32,7 @@ public class Main {
 			new ServerDocHandler(folder);
 			new ServerSocketHandler(port);
 		} catch(Exception e){
-			//e.printStackTrace();
-			System.err.println(e.getMessage());
+			Log.debug(e);
 			System.err.println("Usage: java server.Main portnr folder");
 			System.exit(-1);
 		}

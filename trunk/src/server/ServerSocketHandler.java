@@ -15,7 +15,7 @@ public class ServerSocketHandler {
 			Log.debug("server started on port "+serverSocket.getLocalPort());
 			waitForClient();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 	
@@ -29,8 +29,8 @@ public class ServerSocketHandler {
 				Thread t = new Thread(new ServerSocketThread(socket), "ServerSocketThread");
 				t.start();
 				
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} catch (IOException e) {
+				Log.error(e);
 				return;
 			}
 		}

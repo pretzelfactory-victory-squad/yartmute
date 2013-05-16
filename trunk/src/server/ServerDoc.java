@@ -48,7 +48,7 @@ public class ServerDoc {
 				Log.debug("Socket closed");
 				removeUser(w);
 			}catch (IOException e) {
-				e.printStackTrace();
+				Log.error(e);
 			}
 		}
 	}
@@ -104,7 +104,7 @@ public class ServerDoc {
 		} catch(FileNotFoundException e){
 			throw e;
 		}catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 
 	}
@@ -126,7 +126,7 @@ public class ServerDoc {
 			out.flush();
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 		Log.debug("Document " + file.getName() +" saved to disk.");
 	}
@@ -179,7 +179,7 @@ public class ServerDoc {
 			try{
 				end = firstLine.substring(slotStart); 
 			}catch(StringIndexOutOfBoundsException e){
-				e.printStackTrace();
+				Log.error(e);
 			}
 			firstLine.replace(slotStart, firstLine.length(), lines[0]);
 			for(int i = lineStart+1; i<lines.length-1; i++){
