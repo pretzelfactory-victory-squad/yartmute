@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -11,12 +12,13 @@ import common.Command;
 import common.Log;
 import common.toclient.Update;
 
-public class ClientDoc extends Observable implements Observer{
+public class ClientDoc implements Observer{
 	private StringBuilder text;
 	private long version;
 	private ClientSocketReader reader;
 	private int caretPosition;
 	private Client client;
+	private ArrayList<Listener> listeners = new ArrayList<Listener>();
 	
 	public ClientDoc(Client c, String text, Long version){
 		client = c;
@@ -43,8 +45,20 @@ public class ClientDoc extends Observable implements Observer{
 			if(client.getUserId() != c.getUserId() && end < caretPosition){
 				caretPosition += c.getText().length()-(end-start);
 			}
-			setChanged();
-			notifyObservers();
+			notifyListeners();
+		}
+	}
+	
+	public void addListener(Listener l){
+		listeners.add(l);
+	}
+	public void removeListener(Listener l){
+		listeners.remove(l);
+	}
+	
+	public void notifyListeners(){
+		for(Listener l : listeners){
+			l.update(this);
 		}
 	}
 	
@@ -64,5 +78,9 @@ public class ClientDoc extends Observable implements Observer{
 	}
 	public int getCaretPosition() {
 		return caretPosition;
+	}
+	
+	public interface Listener{
+		void update(ClientDoc clientDoc);
 	}
 }

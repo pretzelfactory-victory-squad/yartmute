@@ -29,9 +29,8 @@ public class ClientGUI extends JFrame implements Observer{
 	private JMenuBar menuBar;
 	private Client client;
 	private String[] files;
-	private JTextArea textArea;
-	private ClientDoc doc;
-	private TextAreaListener listener;
+	private TextArea textArea;
+	ClientDoc doc;
 	private JScrollPane scrollPane;
 
 	private static final String START_TEXT = ""+
@@ -88,12 +87,9 @@ public class ClientGUI extends JFrame implements Observer{
 	}
 
 	private void createTextArea() {
-		textArea = new JTextArea();
+		textArea = new TextArea(client, this);
 		textArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-		textArea.setText(START_TEXT);
-		listener = new TextAreaListener();
-		textArea.addCaretListener(listener);
-		textArea.getDocument().addDocumentListener(listener);
+		textArea.setText(START_TEXT, false);
 		textArea.setEditable(false);
 
 		scrollPane = new JScrollPane(textArea);
@@ -166,7 +162,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private void showError(String msg){
 		JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
 	}
-	private void showError(Exception e){
+	void showError(Exception e){
 		showError(e.getMessage());
 	}
 
@@ -207,52 +203,37 @@ public class ClientGUI extends JFrame implements Observer{
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		Log.debug(arg0.getClass());
+		TextAreaDoc tDoc = ((TextAreaDoc)textArea.getDocument());
 		if(arg0.equals(doc)){
-			synchronized(textArea){
-				listener.ignore = true;
-				textArea.setText(doc.getText());					 // Updating text and caret position
-				try{
-					textArea.setCaretPosition( doc.getCaretPosition() ); // Restoring caret position
-				}catch(IllegalArgumentException e){
-					
+			try{
+				tDoc.setTextDontNotify(doc.getText());
+				synchronized(textArea){
+					try{
+						textArea.setCaretPosition( doc.getCaretPosition() ); // Restoring caret position
+					}catch(IllegalArgumentException e){
+						
+					}
 				}
-				listener.ignore = false;
+			}catch(BadLocationException e){
+				Log.error(e);
 			}
 		}else if(arg0.equals(client)){
 			if(arg1 instanceof Exception){
 				showError((Exception)arg1);
 				if(!client.isConnected()){
-					listener.ignore = true;
-					textArea.setText("");
-					textArea.setEditable(false);
-					listener.ignore = false;
+					try{
+						tDoc.setTextDontNotify("");
+						textArea.setEditable(false);
+					}catch(BadLocationException e){
+						Log.error(e);
+					}
 				}
 			}
 		}
 	}
 
-	private int[] convertToLineAndSlot(String text) {
-		int length = text.length();
-		int line = 0;
-		int count = 0;
-		for( int i=0; i<text.length(); i++ ) {
-			if( text.charAt(i) == '\n' ) {
-				line++;
-				count = i+1;
-			}
-		}
-		int slot = length - count;
-		//Log.debug("line: "+line+", slot: "+slot);
-		int[] result = {line, slot};
-		return result;
-	}
-
 	public void insertNewFile(String content) {
-		synchronized(listener){
-			listener.ignore = true;
-			textArea.setText(content);
-			listener.ignore = false;
-		}
+		textArea.setText(content, false);
 	}
 	
 	private void dummyLogin(){
@@ -262,75 +243,6 @@ public class ClientGUI extends JFrame implements Observer{
 			} catch (ServerException e) {
 				showError(e);
 			}
-		}
-	}
-
-	private class TextAreaListener implements CaretListener, DocumentListener{
-
-		private String previous;
-		public boolean ignore = false;
-
-		public void savePrevious(){
-			previous = textArea.getText();
-		}
-
-		public void caretUpdate(CaretEvent event) {
-			if(textArea.isEditable()){
-				doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
-			}
-		}
-		public void changedUpdate(DocumentEvent e) {
-			//Plain text components do not fire these events
-		}
-		public void insertUpdate(DocumentEvent event) {
-			if(ignore){
-				Log.debug("insert ignored");
-				savePrevious();
-				return;
-			}
-			savePrevious();
-
-			int offset = event.getOffset();
-			int length = event.getLength();
-
-			String textBefore = previous.substring(0, offset);
-			String insertion = previous.substring(offset, offset+length);
-
-			int[] start = convertToLineAndSlot(textBefore);
-			try {
-				client.queueUpdate(start[0], start[0], start[1], start[1], insertion);
-			} catch (ServerException e) {
-				showError(e);
-			}
-			Log.debug("inserted '"+insertion+"' at line:"+start[0]+"-"+start[0]+", slot:"+start[1]+"-"+start[1]);	
-		}
-		public void removeUpdate(DocumentEvent event) {
-			if(ignore){
-				return;
-			}
-
-			int offset = event.getOffset();
-			int length = event.getLength();
-
-			String textBefore = previous.substring(0, offset);
-			String insertion = previous.substring(offset, offset+length);
-
-			int[] start = convertToLineAndSlot(textBefore);
-			int[] end = convertToLineAndSlot(insertion);
-			end[0] += start[0];
-
-			if(start[0] == end[0]){
-				end[1] += start[1];
-			}
-
-			try {
-				client.queueUpdate(start[0], end[0], start[1], end[1], "");
-			} catch (ServerException e) {
-				showError(e);
-			}
-			
-			Log.debug("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
-			savePrevious();
 		}
 	}
 }

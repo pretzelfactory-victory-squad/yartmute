@@ -173,23 +173,30 @@ public class ServerDoc {
 		if(lines.length == 0){ // no insertion, only delete
 			
 		}else if(lines.length == 1){ 	// single line insert (simplest case)
-			firstLine.insert(slotStart, lines[0]);					
+			firstLine.insert(slotStart, lines[0]);
 		}else{					// multi line insert
 			String end = null;
 			try{
-				end = firstLine.substring(slotStart); 
+				end = firstLine.substring(slotEnd); 
 			}catch(StringIndexOutOfBoundsException e){
 				Log.error(e);
 			}
 			firstLine.replace(slotStart, firstLine.length(), lines[0]);
-			for(int i = lineStart+1; i<lines.length-1; i++){
-				doc.add(i, new StringBuilder(lines[i]));
+			for(int i = 1; i <= lines.length-2; i++){
+				int docLine = lineStart + i;
+				doc.add(docLine, new StringBuilder(lines[i]));
 			}
-			doc.add(new StringBuilder(lines[lines.length-1] + end));
+			int insertLastLineAt = lineStart+lines.length-1;
+			doc.add(insertLastLineAt, new StringBuilder(lines[lines.length-1] + end));
 		}
 		
-		for(StringBuilder s : doc){
-			Log.debug(s);
+
+		if(Log.debugGUI){
+			ServerDebugGUI gui = ServerDebugGUI.getInstance();
+			gui.textArea.setText("");
+			for(StringBuilder s : doc){
+				gui.textArea.append(s+"\n");
+			}
 		}
 		version++;
 	}
