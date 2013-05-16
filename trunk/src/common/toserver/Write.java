@@ -88,7 +88,7 @@ public class Write extends ServerCommand {
 			int wSlotEnd = w.getSlotEnd();
 			int lineDiff = wLineStart-wLineEnd;
 			
-			if(wLineStart <= modLineStart){
+			if(wLineStart < modLineStart){
 				int lines = StringUtils.splitPreserveAllTokens(s, "\n").length; 
 				if(lines != 0 && lineDiff == 0){ 	
 						modLineStart = modLineStart + lines;
