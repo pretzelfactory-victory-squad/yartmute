@@ -4,6 +4,8 @@ public class Log {
 	public static boolean debug = true;
 	public static boolean error = true;
 	public static boolean message = true;
+	public static boolean debugGUI = true;
+	
 	public static void message(Object o){
 		if(message){
 			print(o);

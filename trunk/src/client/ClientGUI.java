@@ -21,6 +21,8 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+
 import client.Client.ServerException;
 
 import common.Log;
@@ -29,9 +31,9 @@ public class ClientGUI extends JFrame implements Observer{
 	private JMenuBar menuBar;
 	private Client client;
 	private String[] files;
-	private JTextArea textArea;
+	private SyncTextArea textArea;
 	private ClientDoc doc;
-	private TextAreaListener listener;
+	private TextAreaListener listener = new TextAreaListener();
 	private JScrollPane scrollPane;
 
 	private static final String START_TEXT = ""+
@@ -88,12 +90,10 @@ public class ClientGUI extends JFrame implements Observer{
 	}
 
 	private void createTextArea() {
-		textArea = new JTextArea();
+		textArea = new SyncTextArea();
+		textArea.addListener(listener);
 		textArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-		textArea.setText(START_TEXT);
-		listener = new TextAreaListener();
-		textArea.addCaretListener(listener);
-		textArea.getDocument().addDocumentListener(listener);
+		textArea.setText(START_TEXT, false);
 		textArea.setEditable(false);
 
 		scrollPane = new JScrollPane(textArea);
@@ -209,23 +209,28 @@ public class ClientGUI extends JFrame implements Observer{
 		Log.debug(arg0.getClass());
 		if(arg0.equals(doc)){
 			synchronized(textArea){
-				listener.ignore = true;
-				textArea.setText(doc.getText());					 // Updating text and caret position
-				try{
-					textArea.setCaretPosition( doc.getCaretPosition() ); // Restoring caret position
-				}catch(IllegalArgumentException e){
-					
+				int caretPos = textArea.getCaretPosition();
+				textArea.setText(doc.getText(), false);					 // Updating text and caret position
+				
+				if(doc.lastUpdatePos < caretPos && doc.lasUpdateUserId != client.getUserId()){ 
+					// if update is by another user and before our caret pos move our caret accordingly
+					caretPos += doc.lastUpdateLength;
 				}
-				listener.ignore = false;
+				
+				try{
+					textArea.setCaretPosition( caretPos ); // Restoring caret position
+				}catch(IllegalArgumentException e){
+					Log.error(e);
+				}
 			}
 		}else if(arg0.equals(client)){
 			if(arg1 instanceof Exception){
 				showError((Exception)arg1);
 				if(!client.isConnected()){
-					listener.ignore = true;
-					textArea.setText("");
-					textArea.setEditable(false);
-					listener.ignore = false;
+					synchronized (textArea) {
+						textArea.setText("", false);
+						textArea.setEditable(false);
+					}
 				}
 			}
 		}
@@ -248,10 +253,8 @@ public class ClientGUI extends JFrame implements Observer{
 	}
 
 	public void insertNewFile(String content) {
-		synchronized(listener){
-			listener.ignore = true;
-			textArea.setText(content);
-			listener.ignore = false;
+		synchronized(textArea){
+			textArea.setText(content, false);
 		}
 	}
 	
@@ -265,71 +268,71 @@ public class ClientGUI extends JFrame implements Observer{
 		}
 	}
 
-	private class TextAreaListener implements CaretListener, DocumentListener{
-
+	private class TextAreaListener implements SyncTextArea.Listener{
 		private String previous;
-		public boolean ignore = false;
 
 		public void savePrevious(){
 			previous = textArea.getText();
 		}
-
-		public void caretUpdate(CaretEvent event) {
-			if(textArea.isEditable()){
+		
+		public void caretUpdate(CaretEvent event, boolean yourUpdate) {
+			/*if(textArea.isEditable()){
 				doc.setCaretPosition( textArea.getCaretPosition() ); // Saving caret (cursor) position
-			}
+			}*/
 		}
-		public void changedUpdate(DocumentEvent e) {
-			//Plain text components do not fire these events
-		}
-		public void insertUpdate(DocumentEvent event) {
-			if(ignore){
-				Log.debug("insert ignored");
+		public void insertUpdate(DocumentEvent event, boolean yourUpdate) {
+			if(!yourUpdate){
 				savePrevious();
 				return;
 			}
-			savePrevious();
 
 			int offset = event.getOffset();
 			int length = event.getLength();
+			Document d = event.getDocument();
+			String t = null;
+			try {
+				t = d.getText(offset, length);
+			} catch (BadLocationException e1) {
+				e1.printStackTrace();
+			}
 
 			String textBefore = previous.substring(0, offset);
-			String insertion = previous.substring(offset, offset+length);
+			//String insertion = previous.substring(offset, offset+length);
 
 			int[] start = convertToLineAndSlot(textBefore);
 			try {
-				client.queueUpdate(start[0], start[0], start[1], start[1], insertion);
+				client.queueUpdate(start[0], start[0], start[1], start[1], t);
 			} catch (ServerException e) {
 				showError(e);
-			}
-			Log.debug("inserted '"+insertion+"' at line:"+start[0]+"-"+start[0]+", slot:"+start[1]+"-"+start[1]);	
-		}
-		public void removeUpdate(DocumentEvent event) {
-			if(ignore){
 				return;
 			}
-
-			int offset = event.getOffset();
-			int length = event.getLength();
-
-			String textBefore = previous.substring(0, offset);
-			String insertion = previous.substring(offset, offset+length);
-
-			int[] start = convertToLineAndSlot(textBefore);
-			int[] end = convertToLineAndSlot(insertion);
-			end[0] += start[0];
-
-			if(start[0] == end[0]){
-				end[1] += start[1];
+			Log.debug("inserted '"+t+"' at line:"+start[0]+"-"+start[0]+", slot:"+start[1]+"-"+start[1]);	
+		}
+		
+		public void removeUpdate(DocumentEvent event, boolean yourUpdate) {
+			if(yourUpdate){
+				int offset = event.getOffset();
+				int length = event.getLength();
+	
+				String textBefore = previous.substring(0, offset);
+				String insertion = previous.substring(offset, offset+length);
+	
+				int[] start = convertToLineAndSlot(textBefore);
+				int[] end = convertToLineAndSlot(insertion);
+				end[0] += start[0];
+	
+				if(start[0] == end[0]){
+					end[1] += start[1];
+				}
+	
+				try {
+					client.queueUpdate(start[0], end[0], start[1], end[1], "");
+				} catch (ServerException e) {
+					showError(e);
+				}
+				
+				Log.debug("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
 			}
-
-			try {
-				client.queueUpdate(start[0], end[0], start[1], end[1], "");
-			} catch (ServerException e) {
-				showError(e);
-			}
-			
-			Log.debug("removed '"+insertion+"' at line:"+start[0]+"-"+end[0]+", slot:"+start[1]+"-"+end[1]);
 			savePrevious();
 		}
 	}
