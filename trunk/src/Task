@@ -8,12 +8,13 @@ Aron - Write command modify
 		Try to connect to server in GUI. (ClientGUI.java:112)
 		Same error on "open file"
 
--ERROR: Server doesnt save file on client disconnect. Used over network, dubble check it.
+-ERROR: Server doesnt save file on client disconnect. Used over network, double check it.
+	INTE FIXAT
 
--ERROR: Client hang if server to connert to does not exist.
+-ERROR: Client hang if server to connert to does not exist.		FIXAT
 		Gives "Operation timed out" after waiting long time.
 
--ERROR	When client connects to another server.
+-ERROR	When client connects to another server.					FIXAT
  	Exception in thread "ServerSocketThread" Client disconnected
 		java.lang.NullPointerException
 		at server.ServerSocketThread.disconnect(ServerSocketThread.java:76)
@@ -22,7 +23,7 @@ Aron - Write command modify
 		at java.lang.Thread.run(Unknown Source)
 
 
--ERROR When listening for updates 
+-ERROR When listening for updates 			FIXAT(?)
 		Exception in thread "ServerSocketThread" java.lang.IndexOutOfBoundsException: Index: 40, Size: 23
 		at java.util.ArrayList.rangeCheck(Unknown Source)
 		at java.util.ArrayList.get(Unknown Source)
@@ -32,4 +33,6 @@ Aron - Write command modify
 		at server.ServerSocketThread.run(ServerSocketThread.java:34)
 		at java.lang.Thread.run(Unknown Source)
 
--ERROR Insertion when no file has been opened generates error
+-ERROR Insertion when no file has been opened generates error FIXAT
+
+-ERROR If one file is open and the user opens another file, the previous file is not saved to disk.
