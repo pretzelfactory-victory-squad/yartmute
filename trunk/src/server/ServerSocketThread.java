@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.file.Watchable;
 
 import server.exceptions.OutOfSyncException;
 import server.exceptions.ServerExeptions;
@@ -31,10 +32,15 @@ public class ServerSocketThread implements Runnable {
 			Log.error(e);
 		}
 	}
+	/**
+	 *  Wrapper method for {@link waitForCommand}, see runnable.
+	 */
 	public void run() {
 		waitForCommand();
 	}
-
+	/**
+	 *  Start a listen loop for the socketthreads for new command.
+	 */
 	private void waitForCommand(){
 		while(true){
 			try {
@@ -68,7 +74,10 @@ public class ServerSocketThread implements Runnable {
 			}
 		}
 	}
-	
+	/**
+	 * Disconnech the connection.
+	 * 
+	 */
 	private void disconnect() {
 		if(doc!=null){
 			doc.save();

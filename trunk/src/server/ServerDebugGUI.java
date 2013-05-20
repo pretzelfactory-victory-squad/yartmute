@@ -26,7 +26,10 @@ public class ServerDebugGUI extends JFrame{
 		scrollPane = new JScrollPane(textArea);
 		add(scrollPane);
 	}
-	
+	/**
+	 * Returns an instance of the ServerDebugGUI
+	 * @return
+	 */
 	public static ServerDebugGUI getInstance(){
 		if(instance == null){
 			instance = new ServerDebugGUI();

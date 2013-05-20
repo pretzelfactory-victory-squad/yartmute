@@ -54,8 +54,12 @@ public class Write extends ServerCommand {
 	private void setVersion(long l) {
 		arg[6] = ""+l;
 	}
-	
-	public void modify(List<Write> list){//inte färdig
+	/**
+	 * DRAGONS AHEAD! Modify the write command to be in sync.
+	 * Must be tested. 
+	 * @param list
+	 */
+	public void modify(List<Write> list){
 		long versionBeforeMod = getVersion();
 		setVersion(versionBeforeMod+1);
 		

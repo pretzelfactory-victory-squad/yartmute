@@ -8,7 +8,10 @@ import common.Log;
 
 public class ServerSocketHandler {
 	private ServerSocket  serverSocket = null;
-	
+	/**
+	 * Start of the server on given port.
+	 *
+	 */
 	public ServerSocketHandler (int port){
 		try {
 			serverSocket = new ServerSocket(port);
@@ -18,7 +21,9 @@ public class ServerSocketHandler {
 			Log.error(e);
 		}
 	}
-	
+	/**
+	 *  A Socket Listen Loop for the server. The loop start of new threads for each connected client.
+	 */
 	public void waitForClient(){
 		while(true){
 			Socket socket = null;

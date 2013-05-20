@@ -12,7 +12,10 @@ public class ServerDocHandler {
 	
 	public static ServerDocHandler instance;
 	private File folder;
-
+	/**
+	 * Set up a handler which import files from the given folder.
+	 * @param folder the relative search path eg. "myfiles/ultimatefolder"
+	 */
 	public ServerDocHandler(File folder){
 		this.folder = folder;
 		File[] listOfFiles = folder.listFiles();
@@ -26,7 +29,12 @@ public class ServerDocHandler {
 		System.err.println();
 		instance = this;
 	}
-
+	/**
+	 * Returns a given document.
+	 * @param filename filename of the document.
+	 * @return Returns the ServerDoc for the given filename.
+	 * @throws FileNotFoundException returns if file not found.
+	 */
 	public synchronized ServerDoc getDoc(String filename) throws FileNotFoundException{
 		if(fileList.containsKey(filename)){
 			return fileList.get(filename);
@@ -36,6 +44,11 @@ public class ServerDocHandler {
 			return doc;
 		}
 	}
+	/**
+	 * Create a new document with given filename.
+	 * @param filename filename of the document.
+	 * @return Returns the ServerDoc for the given filename.
+	 */
 	public synchronized ServerDoc newDoc(String filename){
 		ServerDoc doc = new ServerDoc();
 		doc.openFile(new File(folder, filename));
@@ -43,12 +56,20 @@ public class ServerDocHandler {
 		return doc;
 		
 	}
+	/**
+	 * Save all open documents.
+	 */
 	public synchronized void saveAll(){
 		Collection<ServerDoc> s = fileList.values();
 		for(ServerDoc d: s){
 			d.save();
 		}	
 	}
+	/**
+	 *  Returns a list of all open document.
+	 * 
+	 * @return
+	 */
 	public List<String> getDocList(){	
 		return new ArrayList<String>(fileList.keySet());	
 	}
