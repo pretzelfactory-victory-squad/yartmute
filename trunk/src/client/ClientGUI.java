@@ -70,7 +70,7 @@ public class ClientGUI extends JFrame implements Observer{
 "     | |       \\ \\           \\ \\  \\ \\\n"+
 "     | |        \\ \\           \\ \\  \\ \\\n"+
 "     | |         ) \\           \\ \\  ) \\\n"+
-" jgs `) \\        ^ww            ) \\ ^ww\n"+
+"      ) \\        ^ww            ) \\ ^ww\n"+
 "      ^ww                       ^ww";
 	
 	public ClientGUI(Client client, boolean dummyLogin){
@@ -92,7 +92,7 @@ public class ClientGUI extends JFrame implements Observer{
 	private void createTextArea() {
 		textArea = new SyncTextArea();
 		textArea.addListener(listener);
-		textArea.setFont(new Font("Courier New", Font.PLAIN, 14));
+		textArea.setFont(new Font("Lucida Console", Font.PLAIN, 14));
 		textArea.setText(START_TEXT, false);
 		textArea.setEditable(false);
 
