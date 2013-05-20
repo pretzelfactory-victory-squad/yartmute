@@ -15,7 +15,7 @@ public class ServerSocketHandler {
 	public ServerSocketHandler (int port){
 		try {
 			serverSocket = new ServerSocket(port);
-			Log.debug("server started on port "+serverSocket.getLocalPort());
+			Log.message("server started on port "+serverSocket.getLocalPort());
 			waitForClient();
 		} catch (IOException e) {
 			Log.error(e);

@@ -1,0 +1,1 @@
+java -jar server126nodebug.jar 3790 files

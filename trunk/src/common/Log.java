@@ -4,10 +4,10 @@ package common;
  * A class for logging errors, printing debug info and printing messages to the user. 
  */
 public class Log {
-	public static boolean debug = true;
-	public static boolean error = true;
+	public static boolean debug = false;//true;
+	public static boolean error = false;//true;
 	public static boolean message = true;
-	public static boolean debugGUI = true;
+	public static boolean debugGUI = false;//true;
 	
 	public static void message(Object o){
 		if(message){
