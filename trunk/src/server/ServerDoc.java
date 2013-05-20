@@ -28,17 +28,29 @@ public class ServerDoc {
 	private File file;
 	private UserList users;
 
+	/**
+	 * Add a user connected to the document.
+	 * @param writer Identifies a user.
+	 * @return
+	 */
 	public int addUser(BufferedWriter writer){
 		int id = users.add(writer);
 		Log.debug("Added user with id:"+id);
 		return id;
 	}
+	/**
+	 * Removes a user from the document.
+	 * @param writer Identifies a user.
+	 */
 	public void removeUser(BufferedWriter writer){
 		Log.debug("Remove user");
 		users.remove(writer);
 	}
 
-
+	/**
+	 * Sends out a command to all user connected to this document.
+	 * @param c Command to send out.
+	 */
 	public void sendCmdToConnectedUsers(Command c){
 		for(BufferedWriter w : users){
 			try {
@@ -53,6 +65,10 @@ public class ServerDoc {
 		}
 	}
 
+	/**
+	 * Copy a document and "put" it in this
+	 * @param from Document to copy from.
+	 */
 	public void copy(ServerDoc from){
 		version = from.version;
 		doc = from.doc;
@@ -62,7 +78,7 @@ public class ServerDoc {
 	}
 
 	/** Create a new document. Try to read the argument "file" from harddrive, 
-	 *  if it not exist a new document is created. 
+	 *  Thorws a {@link FileNotFoundException} if the file not exist on harddrive.
 	 * 
 	 * @param file
 	 * Filename for the document.
@@ -102,12 +118,21 @@ public class ServerDoc {
 		}
 
 	}
+	/**
+	 *  Create a empty doc. This constructor shall only be used in conjunction with
+	 *  "openFile" method for initiation.
+	 * 
+	 */
 	public ServerDoc(){
 		users = new UserList();
 		this.file = null;
 		doc = new ArrayList<StringBuilder>();
 		writeCommands = new LinkedList<Write>();
 	}
+	/**
+	 * Create a new file.
+	 * @param file
+	 */
 	public synchronized void openFile(File file){
 		this.file = file;
 		try{
@@ -143,7 +168,10 @@ public class ServerDoc {
 		Log.debug("Document " + file.getName() +" saved to disk.");
 	}
 
-	// Writes out the whole document
+	/**
+	 * Return the userview of the document.
+	 * @return Document in userview
+	 */
 	public synchronized String getDoc() {
 		if(doc.size() != 0){
 			StringBuilder output = new StringBuilder();
@@ -157,10 +185,20 @@ public class ServerDoc {
 			return "";
 		}
 	}
+	/**
+	 * Return the version number.
+	 * @return Version number of the document.
+	 */
 
 	public synchronized long getVerNbr() {
 		return this.version;
 	}
+	/**
+	 * Apply a write command to the document. Modify the command for be in sync with the document.
+	 * @param command The command that writes to document.
+	 * @throws OutOfSyncException Throws this if the input command is to Old for being applied to
+	 * the document.
+	 */
 
 
 	public synchronized void write(Write command) throws OutOfSyncException {
@@ -219,9 +257,15 @@ public class ServerDoc {
 	public String getFileName() {
 		return file.getName();
 	}
+	/**
+	 *  Return the filename of the document.
+	 */
 	public String toString(){
 		return getFileName();
 	}
+	/**
+	 * Compare if equal with to string as comparator.
+	 */
 	public boolean equals(Object obj){
 		return toString().equals(obj.toString());
 	}
