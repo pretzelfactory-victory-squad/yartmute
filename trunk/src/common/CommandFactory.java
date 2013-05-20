@@ -31,6 +31,8 @@ public class CommandFactory {
 			return new Update(removeFirst(arg));
 		case SendFile.TYPE:
 			return new SendFile(removeFirst(arg));
+		case Create.TYPE:
+			return new Create(removeFirst(arg));
 		default:
 			throw new MalformedCommandException("Can't identify command: "+arg[0]);
 		}

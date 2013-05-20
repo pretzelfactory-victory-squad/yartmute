@@ -27,7 +27,7 @@ public class ServerDoc {
 	private List<Write> writeCommands;
 	private File file;
 	private UserList users;
-	
+
 	public int addUser(BufferedWriter writer){
 		int id = users.add(writer);
 		Log.debug("Added user with id:"+id);
@@ -38,7 +38,7 @@ public class ServerDoc {
 		users.remove(writer);
 	}
 
-	
+
 	public void sendCmdToConnectedUsers(Command c){
 		for(BufferedWriter w : users){
 			try {
@@ -60,7 +60,7 @@ public class ServerDoc {
 		file = from.file;
 		users = from.users;
 	}
-	
+
 	/** Create a new document. Try to read the argument "file" from harddrive, 
 	 *  if it not exist a new document is created. 
 	 * 
@@ -88,18 +88,12 @@ public class ServerDoc {
 					doc.add(new StringBuilder(line));
 					line = br.readLine();
 				}
-				
+
 				Log.debug("Printing file '" + file.getName() + "'");
 				for (StringBuilder s : doc) {
 					Log.debug(s);
 				}
 				br.close();
-			} else {
-				BufferedWriter out = new BufferedWriter(new FileWriter(file, false));
-				out.write("0");
-				out.flush();
-				Log.debug("Created new document with filename '" + file.getName() + "'");
-				out.close();
 			}
 		} catch(FileNotFoundException e){
 			throw e;
@@ -107,6 +101,24 @@ public class ServerDoc {
 			Log.error(e);
 		}
 
+	}
+	public ServerDoc(){
+		users = new UserList();
+		this.file = null;
+		doc = new ArrayList<StringBuilder>();
+		writeCommands = new LinkedList<Write>();
+	}
+	public synchronized void openFile(File file){
+		this.file = file;
+		try{
+			BufferedWriter out = new BufferedWriter(new FileWriter(file, false));
+			out.write("0");
+			out.flush();
+			Log.debug("Created new document with filename '" + file.getName() + "'");
+			out.close();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	/** Save the document/object to disk
 	 */
@@ -133,13 +145,17 @@ public class ServerDoc {
 
 	// Writes out the whole document
 	public synchronized String getDoc() {
-		StringBuilder output = new StringBuilder();
-		for (StringBuilder s : doc) {
-			output.append(s);
-			output.append('\n');
+		if(doc.size() != 0){
+			StringBuilder output = new StringBuilder();
+			for (StringBuilder s : doc) {
+				output.append(s);
+				output.append('\n');
+			}
+			output.delete(output.length()-1, output.length());
+			return output.toString();
+		} else {
+			return "";
 		}
-		output.delete(output.length()-1, output.length());
-		return output.toString();
 	}
 
 	public synchronized long getVerNbr() {
@@ -151,14 +167,14 @@ public class ServerDoc {
 		command.modify(writeCommands);
 		writeCommands.add(command);
 		String text = command.getText();
-		
+
 		String[] lines = StringUtils.splitPreserveAllTokens(text, '\n'); // because String.split ignores trailing whitespace
-		
+
 		int lineStart = command.getLineStart();
 		int lineEnd = command.getLineEnd();
 		int slotStart = command.getSlotStart();
 		int slotEnd = command.getSlotEnd();
-		
+
 		StringBuilder firstLine = doc.get(lineStart);
 		StringBuilder lastLine = doc.get(lineEnd);
 
@@ -169,9 +185,9 @@ public class ServerDoc {
 
 			firstLine.replace(slotStart, firstLine.length(), lastLine.substring(slotEnd));
 		}
-		
+
 		if(lines.length == 0){ // no insertion, only delete
-			
+
 		}else if(lines.length == 1){ 	// single line insert (simplest case)
 			firstLine.insert(slotStart, lines[0]);
 		}else{					// multi line insert
@@ -189,7 +205,7 @@ public class ServerDoc {
 			int insertLastLineAt = lineStart+lines.length-1;
 			doc.add(insertLastLineAt, new StringBuilder(lines[lines.length-1] + end));
 		}
-		
+
 
 		if(Log.debugGUI){
 			ServerDebugGUI gui = ServerDebugGUI.getInstance();

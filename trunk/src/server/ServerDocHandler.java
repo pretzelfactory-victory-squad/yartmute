@@ -36,6 +36,13 @@ public class ServerDocHandler {
 			return doc;
 		}
 	}
+	public synchronized ServerDoc newDoc(String filename){
+		ServerDoc doc = new ServerDoc();
+		doc.openFile(new File(folder, filename));
+		fileList.put(filename, doc);
+		return doc;
+		
+	}
 	public synchronized void saveAll(){
 		Collection<ServerDoc> s = fileList.values();
 		for(ServerDoc d: s){
