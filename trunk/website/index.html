@@ -2,17 +2,53 @@
 <head>
 	<meta charset="utf-8">
 </head>
-<body>
+<body style="width:80%; margin:10px auto;">
 	<header>
-		<h1>YARTMUTE - Yet Another Real-Time Multi-User Text Editor</h1>
+		<pre> __   __ _______  ______ _______ _______ _     _ _______ _______
+   \_/   |_____| |_____/    |    |  |  | |     |    |    |______
+    |    |     | |    \_    |    |  |  | |_____|    |    |______</pre>
 	</header>
+	<section><pre>
+                            ,
+                           //\
+                          / | ;
+                          | /_|
+                        .-"`  `"-.
+                      /`          `\
+                     /              \
+               .-.,_|      .-""""-. |
+              |     `",_,-'  (((-. '(
+               \ (`"=._.'/   (  (o>'-`"#
+    ,           '.`"-'` /     `--`  '==;
+   /\\            `'--'`\         _.'~~
+  / | \                  `.,___,-}
+  | |  |                   )  {  }
+   \ \ (.--==---==-------=' o {  }
+    ",/` (_) (_)  (_)    (_)   \ /
+     / ()   o   ()    ()        ^|
+     \   ()  (    () o        ;  /
+      `\      \         ;    / } |
+        )      \       /   /`  } /
+     ,-'       |=,_   |   /,_ ,'/
+     |    _,.-`/   `"=\   \\   \
+     | ."` \  |        \   \`\  \
+     | |    \ \         `\  \ `\ \
+     | |     \ \          `\ \  \ \
+     | |      \ \           \ \  \ \
+     | |       \ \           \ \  \ \
+     | |        \ \           \ \  \ \
+     | |         ) \           \ \  ) \
+ jgs `) \        ^ww            ) \ ^ww
+      ^ww                       ^ww
+	</pre></section>
 	<section>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		<h1>Yet Another Real-Time Multi-User Text Editor</h1>
 		
-		<h2>Manual</h2>
+		<h2>Quick guide</h2>
 		<h3>1. Ladda ner</h3>
 		<p><a href="jar_files/yartmute.zip">yartmute.zip</a> Innehåller server- och klientprogrammet samt källkod</p>
 		<p><a href="http://www.oracle.com/technetwork/java/javase/downloads/java-se-jre-7-download-432155.html">Java runtime edition 7</a> eller nyare</p>
+		<p><a href="#">Projektrapport</a></p>
 		
 		<h3>2. Starta servern</h3>
 		<pre>java -jar server.jar [portnr] [folder]</pre>
@@ -21,9 +57,40 @@
 		<h3>3. Starta klienter</h3>
 		<pre>Klicka på client.jar</pre>
 		
-		<h2>Rapport</h2>
-		<a href="#">Projektrapport</a>
-
+		<h2>Översikt över resultatet</h2>
+				<!-- Vad är detför någon tjänst ni har implementerat? Vad kan man göra, dvs vilken funktionalitet
+				finns i programvara? Lägg gärna in några snygga skärmdumpar som visar hur applikationen
+				ser ut och fungerar. Gör en sida som fungerar som reklam för er produkt!
+				-->
+				
+			<p>YARTMUTE är en texteditor där flera användare samtidigt kan editera textfiler. 
+			Tänkbara användningsområden är ex. redigering av LaTeX-dokument eller ASCII-art. 
+			</p>
+			<img src="img/2.png"/>
+			<img src="img/4.png"/>
+			
+		<h2>Använda tekniker och mycket översiktlig design</h2>
+				<!-- Vilka nätverkstekniker använde ni? UDP? TCP? RMI? Servlets? Något annat? Hur ser den
+				övergripande designen ut? Vilken funktionalitet finns var i nätverket? Håll avsnittet kortfattat. 
+				Det är inte meningen att den detaljerade designen eller källkoden ska finnas med. -->
+				
+			<p>Klienten och servern sätter upp en TCP-koppling där kommandon skickas i båda riktningar.
+			Kommandona är på en rad vardera som läses från/skrivs till byte-arrays med BufferedReaders/Writers. 
+			CommandFactory-klassen skapar kommandon från de mottagna strängarna. Uppdateringarna kan ske både 
+			tecken för tecken samt i större stycken. 
+			Klienten består av ett GUI samt klasser för läsning och skrivning på socketen. Programmet kör 
+			3 trådar; en för GUI-t, en för skrivning, och en för läsning.</p>
+		
+		<h2>Kortfattad utvärdering</h2>
+				<!-- En kortfattad sammanfattning av arbetet. Lyckades ni åstadkomma det ni föresatte er när
+				projektet började? Vad var svårt i projektet och vad var särskiltintressant? Har några råd till
+				någon som vill göra ettliknande projekt nästa år? -->
+		
+			<p>Många problem uppstod längs vägen och det slutade med att endast grundläggande funktioner blev 
+			implementerade och programmet kräver ytterligare utveckling för att användas i större omfattning.
+			En stor utmaning var att se till att alla användares ändringar blir rätt, även om de inte har samma 
+			version av dokumentet, vilket kan uppstå då flera personer ändrar samtidigt. 
+			</p>
 	</section>
 	<section>
 		<p>Av: Elias Gabrielsson adi10ega, Niklas Strandberg, Johan Svensson & Aron Söderling</p>
