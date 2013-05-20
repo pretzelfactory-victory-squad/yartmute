@@ -33,6 +33,11 @@ public class ClientDoc extends Observable implements Observer{
 	public long getVersion() {
 		return version;
 	}
+	
+	/**
+	 * This object observes the socket reader {@code ClientSocketReader}. 
+	 * When the reader receives a command this method is called
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		Update c = (Update)reader.getCommand(Update.TYPE);
@@ -50,6 +55,12 @@ public class ClientDoc extends Observable implements Observer{
 		}
 	}
 	
+	/**
+	 * Returns the number of chars in the text up to {@code line} {@code slot}
+	 * @param line
+	 * @param slot
+	 * @return number of chars
+	 */
 	private int convertToSlot(int line, int slot) {
 		int countLine = 0;
 		int result = 0;

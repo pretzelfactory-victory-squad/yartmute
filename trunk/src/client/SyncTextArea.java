@@ -10,11 +10,19 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
+/**
+ * A class extending JTextArea to control the notification of the listeners.
+ */
 public class SyncTextArea extends JTextArea implements CaretListener, DocumentListener{
 	ArrayList<Listener> listeners = new ArrayList<Listener>();
 	boolean fromServer = true;
 	private int caretPos;
 
+	/**
+	 * Set the text in the textarea
+	 * @param t
+	 * @param fromServer
+	 */
 	public synchronized void setText(String t, boolean fromServer) {
 		boolean change = (this.fromServer != fromServer);
 		if(change){

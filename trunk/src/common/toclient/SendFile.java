@@ -1,6 +1,8 @@
 package common.toclient;
 
-
+/**
+ * Command send from server to client as a response to a Open-command.
+ */
 public class SendFile extends ClientCommand {
 	public static final String TYPE = "SFILE";
 

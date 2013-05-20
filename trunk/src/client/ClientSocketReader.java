@@ -18,6 +18,9 @@ import common.toclient.SendFile;
 import common.toclient.SendFileList;
 import common.toserver.GetFileList;
 
+/**
+ * Reads the socket input stream and saves incoming commands to a list.
+ */
 public class ClientSocketReader extends Observable{
 
 	private boolean isConnected;
@@ -25,6 +28,11 @@ public class ClientSocketReader extends Observable{
 	private Thread thread;
 	private List<Command> commands = new ArrayList<Command>();
 
+	/**
+	 * Reads the socket input stream and saves incoming commands to a list.
+	 * @param client The client object
+	 * @param socket The socket object
+	 */
 	public ClientSocketReader(final Client client, Socket socket){
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
@@ -59,6 +67,10 @@ public class ClientSocketReader extends Observable{
 		thread.start();
 	}
 
+	/**
+	 * Wait for a new line in the input stream and creates a command from it.
+	 * @throws IOException
+	 */
 	public void waitForUpdate() throws IOException{
 		String line = reader.readLine();
 		if(line == null){
@@ -75,6 +87,11 @@ public class ClientSocketReader extends Observable{
 		}
 	}
 
+	/**
+	 * Pauses the calling thread until a command of type {@code type} is received
+	 * @param type The type of the command
+	 * @return
+	 */
 	Command waitForCommand(String type) {
 		try {
 			boolean wait = true;
@@ -98,16 +115,28 @@ public class ClientSocketReader extends Observable{
 		}
 	}
 
+	/**
+	 * Pauses the calling thread until a {@code SendFileList}-command is received
+	 * @return The {@code SendFileList} command
+	 */
 	public String[] waitForFileList(){
 		SendFileList cmd = (SendFileList)waitForCommand(SendFileList.TYPE);
 		return cmd.getFileList();
 	}
 
+	/**
+	 * Pauses the calling thread until a {@code SendFile}-command is received
+	 * @return The file
+	 */
 	public String waitForFile() {
 		SendFile cmd = (SendFile)waitForCommand(SendFile.TYPE);
 		return cmd.getFile();
 	}
 
+	/**
+	 * Search the list of received commands for one of the specified type
+	 * @return A command of the specified type or null 
+	 */
 	public Command getCommand(String type) {
 		for(Command c: commands){
 			if(c.getType().equals(type)){

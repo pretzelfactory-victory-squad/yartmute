@@ -72,10 +72,6 @@ public class Client extends Observable{
 			throw new ServerException(cmd.getErrorMsg());
 		}
 	}
-
-	public void uploadFile(){
-
-	}
 	
 	/** 
 	 * Fetch the list of editable files from the server. 
@@ -92,14 +88,22 @@ public class Client extends Observable{
 		return list;
 	}
 	
+	
+	/**
+	 * Reset socket and notify observers with the exception causing the reset
+	 * @param e the exception causing the reset
+	 */
 	public void socketReset(Exception e){
 		if(connected){
-			connected = false;
+			closeConnection();
 			setChanged();
 			notifyObservers(e);
 		}
 	}
 
+	/**
+	 * Close the connection to the server
+	 */
 	public void closeConnection() {
 		connected = false;
 		try{
@@ -146,6 +150,7 @@ public class Client extends Observable{
 	public boolean isConnected() {
 		return connected;
 	}
+	
 	
 	public static class ServerException extends IOException{
 		public ServerException(String errorMsg) {

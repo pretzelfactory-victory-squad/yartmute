@@ -2,9 +2,16 @@ package common;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
+/**
+ * Baseclass for all commands sent to and from the server
+ */
 public class Command {
 	protected String type;
 	protected String[] arg;
+	public static final char ARG_DIVIDER = '>';
+	public static final char NEWLINE_REPLACEMENT = '<';
 	
 	public Command(String[] arg){
 		this.arg = arg;
@@ -17,7 +24,7 @@ public class Command {
 	public String toString(){
 		StringBuilder b = new StringBuilder(type);
 		for(String s:arg){
-			b.append(':');
+			b.append(ARG_DIVIDER);
 			b.append(escape(s));
 		}
 		b.append('\n');
@@ -34,20 +41,22 @@ public class Command {
 		if(string == null){
 			return null;
 		}
-		return string.replace(':','>').replace('\n','<');
+		string = StringEscapeUtils.escapeHtml4(string);
+		string = string.replace('\n', NEWLINE_REPLACEMENT);
+		return string; //string.replace(">", "\\>").replace("<", "\\<").replace(':','>').replace('\n','<');
 	}
 	
 	public static String unescape(String string) {
 		if(string == null){
 			return null;
 		}
-		return string.replace('<', '\n').replace('>',':');
+		string = string.replace(NEWLINE_REPLACEMENT, '\n');
+		return StringEscapeUtils.unescapeHtml4(string); //string.replace("\\>",">").replace("\\<", "<").replace('>',':').replace('<', '\n');
 	}
 	
 	public class CommandArgumentException extends IOException{
 		public CommandArgumentException(String message){
 			super(message);
 		}
-		
 	}
 }

@@ -73,6 +73,11 @@ public class ClientGUI extends JFrame implements Observer{
 "      ) \\        ^ww            ) \\ ^ww\n"+
 "      ^ww                       ^ww";
 	
+	/**
+	 * Create a new Client gui.
+	 * @param client the client
+	 * @param dummyLogin if you want to automatically login to localhost on the default port
+	 */
 	public ClientGUI(Client client, boolean dummyLogin){
 		this.client = client;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -9,8 +9,15 @@ import common.toserver.*;
 
 
 public class CommandFactory {
+	
+	/**
+	 * Create a command from a string
+	 * @param s The string
+	 * @return The created command
+	 * @throws MalformedCommandException
+	 */
 	public static Command getCommand(String s) throws MalformedCommandException{
-		String[] arg = StringUtils.splitPreserveAllTokens(s, ":");
+		String[] arg = StringUtils.splitPreserveAllTokens(s, Command.ARG_DIVIDER);
 		
 		for(int i=0; i<arg.length; i++){
 			arg[i] = Command.unescape(arg[i]);
@@ -37,12 +44,31 @@ public class CommandFactory {
 			throw new MalformedCommandException("Can't identify command: "+arg[0]);
 		}
 	}
+	
+	/**
+	 * Create a command from a byte stream
+	 * @param s The bytestream
+	 * @return The created command
+	 * @throws MalformedCommandException
+	 */
 	public static Command getCommand(byte[] s) throws MalformedCommandException{
 		return getCommand(new String(s));
 	}
+	
+	/**
+	 * Create a command from a char array
+	 * @param s The char array
+	 * @return The created command
+	 * @throws MalformedCommandException
+	 */
 	public static Command getCommand(char[] s) throws MalformedCommandException{
 		return getCommand(new String(s));
 	}
+	
+	/**
+	 * Removes the first arg (containing the command type) from the array
+	 * @param arg the arguments
+	 */
 	private static String[] removeFirst(String[] arg){
 		String[] s = new String[arg.length-1];
 		for(int i=1; i<arg.length; i++){

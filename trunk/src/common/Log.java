@@ -1,5 +1,8 @@
 package common;
 
+/**
+ * A class for logging errors, printing debug info and printing messages to the user. 
+ */
 public class Log {
 	public static boolean debug = true;
 	public static boolean error = true;

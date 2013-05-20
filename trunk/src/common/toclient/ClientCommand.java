@@ -2,6 +2,9 @@ package common.toclient;
 
 import common.Command;
 
+/**
+ * Abstract class for commands sent to the client
+ */
 public abstract class ClientCommand extends Command {
 
 	public ClientCommand(String[] arg) {

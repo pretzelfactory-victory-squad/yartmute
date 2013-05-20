@@ -14,6 +14,11 @@ import common.toserver.ServerCommand;
 
 public class ClientSocketWriter {
 	private BufferedWriter writer;
+	
+	/**
+	 * Create a new socket writer
+	 * @param os the outputstream for the socket
+	 */
 	public ClientSocketWriter(OutputStream os){
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
@@ -22,6 +27,11 @@ public class ClientSocketWriter {
 		}
 	}
 	
+	/**
+	 * Send a command to the server
+	 * @param command the command
+	 * @throws SocketException
+	 */
 	public void sendCommand(ServerCommand command) throws SocketException{
 		Log.debug("Sending cmd:  "+command);
 		try {
@@ -34,10 +44,19 @@ public class ClientSocketWriter {
 		}
 	}
 	
+	/**
+	 * Request a list of editable files on the server
+	 * @throws SocketException
+	 */
 	public void getFileList() throws SocketException{
 		sendCommand(new GetFileList());
 	}
 	
+	/**
+	 * Request a file from the server
+	 * @param file
+	 * @throws SocketException
+	 */
 	public void openFile(String file) throws SocketException {
 		sendCommand(new Open(file));
 	}
