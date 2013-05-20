@@ -81,7 +81,7 @@ public class Write extends ServerCommand {
 		
 		
 		for(Write w: list.subList(fromIndex, toIndex)){
-			String s = w.getArg(4);
+			String s = w.getText();
 			int wLineStart = w.getLineStart();
 			int wLineEnd = w.getLineEnd();
 			int wSlotStart = w.getSlotStart();
@@ -113,10 +113,30 @@ public class Write extends ServerCommand {
 				}
 			}
 		}
-		arg[0] = ""+modLineStart;
-		arg[1] = ""+modLineEnd;
-		arg[2] = ""+modSlotStart;
-		arg[3] = ""+modSlotEnd;
+		this.setLineStart(modLineStart);
+		this.setLineEnd(modLineEnd);
+		this.setSlotStart(modSlotStart);
+		this.setSlotEnd(modSlotEnd);
+	}
+
+	private void setSlotEnd(int slotEnd) {
+		arg[3] = ""+slotEnd;
+		
+	}
+
+	private void setSlotStart(int slotStart) {
+		arg[2] = ""+slotStart;
+		
+	}
+
+	private void setLineEnd(int lineEnd) {
+		arg[1] = ""+lineEnd;
+		
+	}
+
+	private void setLineStart(int lineStart) {
+		arg[0] = ""+lineStart;
+		
 	}
 
 	@Override

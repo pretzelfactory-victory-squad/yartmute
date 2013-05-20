@@ -86,6 +86,7 @@ public class ClientGUI extends JFrame implements Observer{
 		}
 
 		this.setSize(800, 600);
+		this.setTitle("YARTMUTE - Yet Another Real-Time Multi User Text Editor");
 		setVisible(true);
 	}
 
@@ -121,15 +122,6 @@ public class ClientGUI extends JFrame implements Observer{
 		openFileItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				openFileDialog();
-			}
-		});
-
-		JMenuItem uploadFileItem = new JMenuItem("Upload file");
-		menu.add(uploadFileItem);
-
-		uploadFileItem.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				uploadFile();
 			}
 		});
 
