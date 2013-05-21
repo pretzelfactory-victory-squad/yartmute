@@ -23,24 +23,23 @@ public class CommandFactory {
 			arg[i] = Command.unescape(arg[i]);
 		}
 		
-		switch(arg[0]){
-		case GetFileList.TYPE:
+		if(arg[0].equals(GetFileList.TYPE)){
 			return new GetFileList();
-		case SendFileList.TYPE:
+		}else if(arg[0].equals(SendFileList.TYPE)){
 			return new SendFileList(removeFirst(arg));
-		case Open.TYPE:
+		}else if(arg[0].equals(Open.TYPE)){
 			return new Open(removeFirst(arg));
-		case Read.TYPE:
+		}else if(arg[0].equals(Read.TYPE)){
 			return new Read(removeFirst(arg));
-		case Write.TYPE:
+		}else if(arg[0].equals(Write.TYPE)){
 			return new Write(removeFirst(arg));
-		case Update.TYPE:
+		}else if(arg[0].equals(Update.TYPE)){
 			return new Update(removeFirst(arg));
-		case SendFile.TYPE:
+		}else if(arg[0].equals(SendFile.TYPE)){
 			return new SendFile(removeFirst(arg));
-		case Create.TYPE:
+		}else if(arg[0].equals(Create.TYPE)){
 			return new Create(removeFirst(arg));
-		default:
+		}else{
 			throw new MalformedCommandException("Can't identify command: "+arg[0]);
 		}
 	}
