@@ -42,7 +42,9 @@ __   __ _______  ______ _______ _______ _     _ _______ _______
 
 ### 1. Ladda ner
 [yartmute.zip](jar_files/yartmute.zip) Innehåller server- och klientprogrammet samt källkod
+
 [Java runtime edition 7](http://www.oracle.com/technetwork/java/javase/downloads/java-se-jre-7-download-432155.html) eller nyare
+
 [Projektrapport](jar_files/EDA095Projektrapport.pdf)
 		
 ### 2. Starta servern
@@ -59,8 +61,8 @@ folder är mappen med editerbara textfiler. OBS: Filerna ska avslutas med \END\
 				
 YARTMUTE är en texteditor där flera användare samtidigt kan editera textfiler. 
 Tänkbara användningsområden är ex. redigering av LaTeX-dokument eller ASCII-art. 
-![](img/2.png)
-![](img/4.png)
+![](2.png)
+![](4.png)
 
 ## Använda tekniker och mycket översiktlig design
 
